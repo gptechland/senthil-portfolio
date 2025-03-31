@@ -5,6 +5,6 @@ title: Home
 
 # Welcome to Senthil's Tech Space
 
-Hi, I'm **Senthil Kumar**, a senior IT executive and education consultant with deep expertise in Agile, DevOps, ERP, ISMS, and career coaching.
+Hi, I'm **Senthil Kumar**, a senior IT executive and technology advisor with deep expertise in Agile, DevOps, ERP, cybersecurity, and strategic IT enablement.
 
-Here, I share insights from real-world enterprise IT, project management, and career astrology. Explore my blog to learn more about tech, transformation, and talent.
+This site is where I share insights from enterprise IT leadership, project transformation journeys, and career mentoring. Explore the blog to learn more about modern IT thinking and value creation.

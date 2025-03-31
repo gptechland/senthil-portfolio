@@ -7,7 +7,7 @@ title: About
 
 # About Me
 
-I am a seasoned **IT Executive** with a proven record in **Grid Automation**, currently shaping the digital transformation journey at **GE Vernova – Grid Solutions**. My role blends strategic leadership with executional depth—spanning infrastructure modernization, application engineering, and business-IT alignment.
+I am a seasoned **IT Executive** with a proven record in digital transformation across infrastructure, applications, and enterprise architecture. My role blends strategic leadership with executional depth—spanning modernization initiatives, delivery excellence, and business-IT alignment.
 
 ### 💼 Professional Focus
 
@@ -21,7 +21,7 @@ My domain coverage reflects end-to-end enterprise enablement across:
 
 ### 🛠️ Technical Expertise & Leadership Impact
 
-- Architected and operationalized the **multi-year application modernization blueprint**, aligning enterprise technology with evolving grid innovation and global digital imperatives.
+- Architected and operationalized the **multi-year application modernization blueprint**, aligning enterprise technology with evolving innovation goals and digital imperatives.
 - Championed **enterprise agility** through forward-leaning initiatives in digital innovation, serving as an **AI generalist** to incubate GenAI use cases, tool adoption, and intelligent automation across the value chain.
 - Instituted and governed the **IT OpsMech framework**, collaborating with CXOs and business leaders to craft transformational roadmaps, steer high-impact programs through executive committees, and optimize strategic IT investments.
 - Enabled integrated **ERP evolution (SAP/Oracle)** as a foundational pillar of enterprise architecture, harmonizing business processes and ensuring cohesive data intelligence across functions.
