@@ -1,3 +1,5 @@
 title: Senthil's Portfolio
 description: Blog & portfolio by Senthil Kumar — Agile | DevOps | ERP | ISMS
-theme: minima
+theme: null
+markdown: kramdown
+permalink: pretty
