@@ -1,21 +1,22 @@
+
 <!DOCTYPE html>
 <html>
 <head>
   <title>{{ page.title }}</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
-    nav a { margin-right: 15px; }
-  </style>
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
   <nav>
     <a href="{{ '/' | relative_url }}">Home</a>
     <a href="{{ '/about' | relative_url }}">About</a>
-    <a href="{{ '/blog/agile-first-steps' | relative_url }}">Blog</a>
+    <a href="{{ '/blog' | relative_url }}">Blog</a>
   </nav>
   <hr>
   {{ content }}
+  <footer>
+    &copy; 2025 Senthil Kumar — Built with GitHub Pages & is-a.dev
+  </footer>
 </body>
 </html>
