@@ -1,6 +1,7 @@
 ---
 layout: default
 title: About
+permalink: /about/
 ---
 
 <img src="/assets/img/senthil.jpg" alt="Senthil Kumar" class="profile" />
