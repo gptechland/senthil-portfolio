@@ -1,0 +1,2300 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAE Gratuity Calculator | حاسبة مكافأة نهاية الخدمة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0A2540;
+            --primary-light: #1a3a5c;
+            --accent: #00D4AA;
+            --accent-glow: rgba(0, 212, 170, 0.2);
+            --gold: #D4A574;
+            --gold-light: #E8C9A0;
+            --bg: #F7F9FC;
+            --bg-card: #FFFFFF;
+            --text: #0A2540;
+            --text-muted: #5A6B7D;
+            --border: #E1E8EF;
+            --error: #E74C3C;
+            --success: #27AE60;
+            --warning: #F39C12;
+            --shadow-sm: 0 2px 8px rgba(10, 37, 64, 0.06);
+            --shadow-md: 0 4px 24px rgba(10, 37, 64, 0.1);
+            --shadow-lg: 0 12px 48px rgba(10, 37, 64, 0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --font-primary: 'DM Sans', sans-serif;
+            --font-arabic: 'Noto Kufi Arabic', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        body.rtl {
+            direction: rtl;
+            font-family: var(--font-arabic);
+        }
+
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, var(--accent-glow) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(212, 165, 116, 0.1) 0%, transparent 50%),
+                linear-gradient(180deg, var(--bg) 0%, #EEF2F7 100%);
+            z-index: -1;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .lang-toggle {
+            display: flex;
+            background: var(--primary-light);
+            border-radius: var(--radius-sm);
+            padding: 4px;
+        }
+
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .lang-btn.active {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 968px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-header p {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            font-size: 0.9375rem;
+        }
+
+        label .help-icon {
+            width: 18px;
+            height: 18px;
+            background: var(--border);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            cursor: help;
+            transition: all 0.2s;
+        }
+
+        label .help-icon:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text);
+            background: white;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .rtl .input-prefix {
+            left: auto;
+            right: 1rem;
+        }
+
+        .has-prefix input {
+            padding-left: 3.5rem;
+        }
+
+        .rtl .has-prefix input {
+            padding-left: 1rem;
+            padding-right: 3.5rem;
+        }
+
+        /* Radio Group */
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 480px) {
+            .radio-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .radio-option {
+            position: relative;
+        }
+
+        .radio-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .radio-option label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            font-weight: 400;
+        }
+
+        .radio-option input:checked + label {
+            border-color: var(--accent);
+            background: rgba(0, 212, 170, 0.05);
+        }
+
+        .radio-option label::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .radio-option input:checked + label::before {
+            border-color: var(--accent);
+            background: var(--accent);
+            box-shadow: inset 0 0 0 4px white;
+        }
+
+        /* Duration Inputs */
+        .duration-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Date Inputs Grid */
+        .date-inputs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .date-inputs-grid .form-group {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 480px) {
+            .date-inputs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Calculated Duration Display */
+        .calculated-duration {
+            margin-top: 1rem;
+            padding: 1rem 1.25rem;
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.08), rgba(0, 212, 170, 0.02));
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            border-radius: var(--radius-sm);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .duration-display {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .duration-icon {
+            font-size: 1.5rem;
+        }
+
+        .duration-text {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        .duration-text strong {
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+        }
+
+        .duration-total {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px dashed rgba(0, 212, 170, 0.3);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Section transitions */
+        .date-section, .manual-section {
+            transition: all 0.3s ease;
+        }
+
+        .date-section.hidden, .manual-section.hidden {
+            display: none;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #00B894);
+            color: var(--primary);
+            width: 100%;
+            box-shadow: 0 4px 16px rgba(0, 212, 170, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(0, 212, 170, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-muted);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Results Card */
+        .results-card {
+            position: sticky;
+            top: 100px;
+        }
+
+        .result-amount {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: var(--radius-md);
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .estimate-label {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            color: #FDE68A;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .result-value {
+            font-family: var(--font-mono);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: -0.02em;
+        }
+
+        .result-currency {
+            font-size: 1.25rem;
+            opacity: 0.8;
+            margin-left: 0.25rem;
+        }
+
+        .rtl .result-currency {
+            margin-left: 0;
+            margin-right: 0.25rem;
+        }
+
+        .result-note {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        /* Breakdown */
+        .breakdown {
+            background: var(--bg);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .breakdown h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .breakdown-value {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .breakdown-formula {
+            background: white;
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            margin-top: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-left: 3px solid var(--accent);
+        }
+
+        .rtl .breakdown-formula {
+            border-left: none;
+            border-right: 3px solid var(--accent);
+        }
+
+        /* Legal Reference */
+        .legal-ref {
+            background: rgba(212, 165, 116, 0.1);
+            border: 1px solid var(--gold-light);
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .legal-ref strong {
+            color: var(--text);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+        }
+
+        /* Collapsible Sections */
+        .collapsible {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+
+        .collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            background: var(--bg);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .collapsible-header:hover {
+            background: var(--border);
+        }
+
+        .collapsible-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .collapsible.open .collapsible-icon {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .collapsible.open .collapsible-content {
+            max-height: 2000px;
+        }
+
+        .collapsible-body {
+            padding: 1.25rem;
+            font-size: 0.9375rem;
+            line-height: 1.7;
+        }
+
+        .collapsible-body h4 {
+            font-size: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .collapsible-body h4:first-child {
+            margin-top: 0;
+        }
+
+        .collapsible-body ul {
+            padding-left: 1.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .rtl .collapsible-body ul {
+            padding-left: 0;
+            padding-right: 1.5rem;
+        }
+
+        .collapsible-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        .collapsible-body a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .collapsible-body a:hover {
+            text-decoration: underline;
+        }
+
+        /* Examples Section */
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .example-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .example-card:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .example-card h4 {
+            font-size: 0.9375rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .example-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .example-result {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Disclaimer */
+        .disclaimer {
+            background: #FFF3CD;
+            border: 2px solid #F0C36D;
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #856404;
+        }
+
+        .disclaimer-icon {
+            margin-right: 0.5rem;
+        }
+
+        .rtl .disclaimer-icon {
+            margin-right: 0;
+            margin-left: 0.5rem;
+        }
+
+        /* Prominent Disclaimer Banner */
+        .disclaimer-banner {
+            background: linear-gradient(135deg, #FFF3CD 0%, #FFE8A1 100%);
+            border: 2px solid #F0C36D;
+            border-left: 6px solid #E67E22;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.15);
+            animation: pulseWarning 2s ease-in-out infinite;
+        }
+
+        .rtl .disclaimer-banner {
+            border-left: 2px solid #F0C36D;
+            border-right: 6px solid #E67E22;
+        }
+
+        @keyframes pulseWarning {
+            0%, 100% { box-shadow: 0 4px 12px rgba(230, 126, 34, 0.15); }
+            50% { box-shadow: 0 4px 20px rgba(230, 126, 34, 0.25); }
+        }
+
+        .disclaimer-banner-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .disclaimer-banner-content h3 {
+            color: #B7791F;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .disclaimer-banner-content p {
+            color: #92400E;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Update Notice */
+        .update-notice {
+            background: linear-gradient(135deg, #EBF5FF 0%, #DBEAFE 100%);
+            border: 1px solid #93C5FD;
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.25rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        .update-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #1E40AF;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(30, 64, 175, 0.1);
+        }
+
+        .update-icon {
+            font-size: 1rem;
+        }
+
+        .update-warning {
+            color: #1E40AF;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 640px) {
+            .disclaimer-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .update-notice {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Comprehensive Disclaimer Section */
+        .disclaimer-section {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 50%, #FEF3C7 100%);
+            border: 2px solid #F59E0B;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 8px 32px rgba(245, 158, 11, 0.2);
+        }
+
+        .disclaimer-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px dashed #D97706;
+        }
+
+        .disclaimer-header-icon {
+            font-size: 1.75rem;
+        }
+
+        .disclaimer-header h3 {
+            color: #92400E;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        .disclaimer-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .disclaimer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .disclaimer-card {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #F59E0B;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .rtl .disclaimer-card {
+            border-left: none;
+            border-right: 4px solid #F59E0B;
+        }
+
+        .disclaimer-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .disclaimer-card.ai-warning {
+            border-left-color: #EF4444;
+        }
+
+        .rtl .disclaimer-card.ai-warning {
+            border-right-color: #EF4444;
+        }
+
+        .disclaimer-card.hr-consult {
+            border-left-color: #3B82F6;
+        }
+
+        .rtl .disclaimer-card.hr-consult {
+            border-right-color: #3B82F6;
+        }
+
+        .disclaimer-card.legal-check {
+            border-left-color: #8B5CF6;
+        }
+
+        .rtl .disclaimer-card.legal-check {
+            border-right-color: #8B5CF6;
+        }
+
+        .disclaimer-card.no-liability {
+            border-left-color: #6B7280;
+        }
+
+        .rtl .disclaimer-card.no-liability {
+            border-right-color: #6B7280;
+        }
+
+        .disclaimer-card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .disclaimer-card h4 {
+            color: #1F2937;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .disclaimer-card p {
+            color: #4B5563;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .disclaimer-footer {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .disclaimer-footer p {
+            margin: 0;
+            color: #78350F;
+            font-size: 0.9rem;
+        }
+
+        .disclaimer-footer a {
+            color: #B45309;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .disclaimer-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Results Disclaimer */
+        .results-disclaimer {
+            margin-top: 1.25rem;
+            padding: 0.875rem 1rem;
+            background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+            border: 1px solid #FCA5A5;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            color: #991B1B;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .results-disclaimer-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip-text {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .tooltip:hover .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Error State */
+        .input-error {
+            border-color: var(--error) !important;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Loading State */
+        .loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* Print Styles */
+        @media print {
+            .header,
+            .btn,
+            .lang-toggle,
+            .collapsible,
+            .examples-grid,
+            .disclaimer {
+                display: none !important;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .calculating {
+            animation: pulse 1s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .result-value {
+                font-size: 2rem;
+            }
+
+            .duration-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.125rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Reduction Badge */
+        .reduction-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .full-badge {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">💼</div>
+                <div class="logo-text">
+                    <h1 data-en="UAE Gratuity Calculator" data-ar="حاسبة مكافأة نهاية الخدمة">UAE Gratuity Calculator</h1>
+                    <span data-en="Based on Federal Decree-Law No. 33 of 2021 • Updated Dec 2025" data-ar="بناءً على المرسوم بقانون اتحادي رقم 33 لسنة 2021 • تحديث ديسمبر 2025">Based on Federal Decree-Law No. 33 of 2021 • Updated Dec 2025</span>
+                </div>
+            </div>
+            <div class="header-controls">
+                <div class="lang-toggle">
+                    <button class="lang-btn active" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="ar">عربي</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- PROMINENT DISCLAIMER BANNER -->
+        <div class="disclaimer-banner">
+            <div class="disclaimer-banner-icon">⚠️</div>
+            <div class="disclaimer-banner-content">
+                <h3 data-en="Important Notice" data-ar="تنبيه مهم">Important Notice</h3>
+                <p data-en="This is an AI-powered calculator for estimation purposes only. Calculations may contain errors. Always consult your HR department or a legal professional for official gratuity calculations." data-ar="هذه حاسبة تعمل بالذكاء الاصطناعي لأغراض التقدير فقط. قد تحتوي الحسابات على أخطاء. استشر دائماً قسم الموارد البشرية أو متخصص قانوني للحصول على حسابات رسمية.">This is an AI-powered calculator for estimation purposes only. Calculations may contain errors. Always consult your HR department or a legal professional for official gratuity calculations.</p>
+            </div>
+        </div>
+
+        <!-- LAST UPDATE NOTICE -->
+        <div class="update-notice">
+            <span class="update-badge">
+                <span class="update-icon">🔄</span>
+                <span data-en="Last Updated: December 2025" data-ar="آخر تحديث: ديسمبر 2025">Last Updated: December 2025</span>
+            </span>
+            <span class="update-warning" data-en="⚡ Please verify if any legal amendments have been made to UAE Labour Law since this date" data-ar="⚡ يرجى التحقق من أي تعديلات قانونية على قانون العمل الإماراتي منذ هذا التاريخ">⚡ Please verify if any legal amendments have been made to UAE Labour Law since this date</span>
+        </div>
+        <div class="main-grid">
+            <!-- Input Form -->
+            <div class="card" style="animation-delay: 0.1s;">
+                <div class="card-header">
+                    <h2>
+                        <span>📝</span>
+                        <span data-en="Employee Details" data-ar="بيانات الموظف">Employee Details</span>
+                    </h2>
+                    <p data-en="Enter your employment information below" data-ar="أدخل معلومات التوظيف الخاصة بك أدناه">Enter your employment information below</p>
+                </div>
+                <div class="card-body">
+                    <form id="gratuityForm">
+                        <!-- Contract Type -->
+                        <div class="form-group">
+                            <label>
+                                <span data-en="Contract Type" data-ar="نوع العقد">Contract Type</span>
+                                <span class="help-icon tooltip">?
+                                    <span class="tooltip-text" data-en="Limited: Fixed duration. Unlimited: No end date." data-ar="محدد المدة: مدة ثابتة. غير محدد: بدون تاريخ انتهاء">Limited: Fixed duration. Unlimited: No end date.</span>
+                                </span>
+                            </label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="contractType" id="limited" value="limited" checked>
+                                    <label for="limited" data-en="Limited (Fixed-Term)" data-ar="محدد المدة">Limited (Fixed-Term)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="contractType" id="unlimited" value="unlimited">
+                                    <label for="unlimited" data-en="Unlimited (Open-Ended)" data-ar="غير محدد المدة">Unlimited (Open-Ended)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Termination Reason -->
+                        <div class="form-group">
+                            <label for="terminationReason">
+                                <span data-en="Termination Reason" data-ar="سبب إنهاء الخدمة">Termination Reason</span>
+                                <span class="help-icon tooltip">?
+                                    <span class="tooltip-text" data-en="Reason affects gratuity entitlement" data-ar="السبب يؤثر على استحقاق المكافأة">Reason affects gratuity entitlement</span>
+                                </span>
+                            </label>
+                            <select id="terminationReason" name="terminationReason">
+                                <option value="termination" data-en="Termination by Employer" data-ar="إنهاء من قبل صاحب العمل">Termination by Employer</option>
+                                <option value="resignation" data-en="Resignation by Employee" data-ar="استقالة الموظف">Resignation by Employee</option>
+                                <option value="completion" data-en="Contract Completion" data-ar="انتهاء العقد">Contract Completion</option>
+                                <option value="death" data-en="Death of Employee" data-ar="وفاة الموظف">Death of Employee</option>
+                                <option value="article44" data-en="Article 44 (Gross Misconduct)" data-ar="المادة 44 (سوء السلوك الجسيم)">Article 44 (Gross Misconduct)</option>
+                            </select>
+                        </div>
+
+                        <!-- Duration Input Method Toggle -->
+                        <div class="form-group">
+                            <label>
+                                <span data-en="Service Duration Method" data-ar="طريقة حساب مدة الخدمة">Service Duration Method</span>
+                            </label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="durationMethod" id="methodDates" value="dates" checked>
+                                    <label for="methodDates" data-en="Calculate from Dates" data-ar="حساب من التواريخ">Calculate from Dates</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="durationMethod" id="methodManual" value="manual">
+                                    <label for="methodManual" data-en="Enter Manually" data-ar="إدخال يدوي">Enter Manually</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Date-based Duration Input -->
+                        <div id="dateInputSection" class="form-group date-section">
+                            <div class="date-inputs-grid">
+                                <div class="form-group">
+                                    <label for="joiningDate">
+                                        <span data-en="Date of Joining" data-ar="تاريخ الالتحاق">Date of Joining</span>
+                                        <span class="help-icon tooltip">?
+                                            <span class="tooltip-text" data-en="First day of employment" data-ar="أول يوم عمل">First day of employment</span>
+                                        </span>
+                                    </label>
+                                    <input type="date" id="joiningDate" name="joiningDate" aria-label="Date of joining">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastDate">
+                                        <span data-en="Last Working Date" data-ar="آخر يوم عمل">Last Working Date</span>
+                                        <span class="help-icon tooltip">?
+                                            <span class="tooltip-text" data-en="Last day of employment (defaults to today)" data-ar="آخر يوم عمل (افتراضياً اليوم)">Last day of employment (defaults to today)</span>
+                                        </span>
+                                    </label>
+                                    <input type="date" id="lastDate" name="lastDate" aria-label="Last working date">
+                                </div>
+                            </div>
+                            <!-- Calculated Duration Display -->
+                            <div class="calculated-duration" id="calculatedDuration" style="display: none;">
+                                <div class="duration-display">
+                                    <span class="duration-icon">📅</span>
+                                    <span class="duration-text">
+                                        <span data-en="Calculated Service:" data-ar="مدة الخدمة المحسوبة:">Calculated Service:</span>
+                                        <strong id="calculatedYears">0</strong> <span data-en="years" data-ar="سنة">years</span>,
+                                        <strong id="calculatedMonths">0</strong> <span data-en="months" data-ar="شهر">months</span>,
+                                        <strong id="calculatedDays">0</strong> <span data-en="days" data-ar="يوم">days</span>
+                                    </span>
+                                </div>
+                                <div class="duration-total" id="totalDaysDisplay"></div>
+                            </div>
+                        </div>
+
+                        <!-- Manual Duration Input -->
+                        <div id="manualInputSection" class="form-group manual-section" style="display: none;">
+                            <label>
+                                <span data-en="Service Duration" data-ar="مدة الخدمة">Service Duration</span>
+                                <span class="help-icon tooltip">?
+                                    <span class="tooltip-text" data-en="Total continuous employment period" data-ar="إجمالي فترة العمل المستمرة">Total continuous employment period</span>
+                                </span>
+                            </label>
+                            <div class="duration-inputs">
+                                <div>
+                                    <input type="number" id="years" name="years" min="0" max="50" step="1" placeholder="Years" aria-label="Years of service">
+                                </div>
+                                <div>
+                                    <input type="number" id="months" name="months" min="0" max="11" step="1" placeholder="Months" aria-label="Months of service">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Basic Salary -->
+                        <div class="form-group">
+                            <label for="salary">
+                                <span data-en="Basic Salary (AED)" data-ar="الراتب الأساسي (درهم)">Basic Salary (AED)</span>
+                                <span class="help-icon tooltip">?
+                                    <span class="tooltip-text" data-en="Monthly basic salary only, excluding allowances" data-ar="الراتب الأساسي الشهري فقط، بدون البدلات">Monthly basic salary only, excluding allowances</span>
+                                </span>
+                            </label>
+                            <div class="input-wrapper has-prefix">
+                                <span class="input-prefix">AED</span>
+                                <input type="number" id="salary" name="salary" min="1" step="0.01" placeholder="10,000" aria-label="Basic monthly salary in AED">
+                            </div>
+                        </div>
+
+                        <!-- Calculate Button -->
+                        <button type="submit" class="btn btn-primary">
+                            <span>📊</span>
+                            <span data-en="Calculate Gratuity" data-ar="احسب المكافأة">Calculate Gratuity</span>
+                        </button>
+                    </form>
+
+                    <!-- Example Scenarios -->
+                    <div class="collapsible" id="examplesCollapsible">
+                        <div class="collapsible-header" onclick="toggleCollapsible('examplesCollapsible')">
+                            <span data-en="📋 Example Scenarios" data-ar="📋 أمثلة توضيحية">📋 Example Scenarios</span>
+                            <span class="collapsible-icon">▼</span>
+                        </div>
+                        <div class="collapsible-content">
+                            <div class="collapsible-body">
+                                <div class="examples-grid">
+                                    <div class="example-card" onclick="loadExample(1)">
+                                        <h4 data-en="Example 1: Termination" data-ar="مثال 1: إنهاء الخدمة">Example 1: Termination</h4>
+                                        <p data-en="Limited contract, 4 years, termination, AED 10,000" data-ar="عقد محدد، 4 سنوات، إنهاء، 10,000 درهم">Limited contract, 4 years, termination, AED 10,000</p>
+                                        <span class="example-result">≈ AED 28,000</span>
+                                    </div>
+                                    <div class="example-card" onclick="loadExample(2)">
+                                        <h4 data-en="Example 2: Resignation (7 yrs)" data-ar="مثال 2: استقالة (7 سنوات)">Example 2: Resignation (7 yrs)</h4>
+                                        <p data-en="Limited contract, 7 years, resignation, AED 15,000" data-ar="عقد محدد، 7 سنوات، استقالة، 15,000 درهم">Limited contract, 7 years, resignation, AED 15,000</p>
+                                        <span class="example-result">≈ AED 82,500</span>
+                                    </div>
+                                    <div class="example-card" onclick="loadExample(3)">
+                                        <h4 data-en="Example 3: Short Resignation" data-ar="مثال 3: استقالة قصيرة">Example 3: Short Resignation</h4>
+                                        <p data-en="Unlimited contract, 2 years, resignation, AED 8,000" data-ar="عقد غير محدد، سنتان، استقالة، 8,000 درهم">Unlimited contract, 2 years, resignation, AED 8,000</p>
+                                        <span class="example-result">≈ AED 3,733</span>
+                                    </div>
+                                    <div class="example-card" onclick="loadExample(4)">
+                                        <h4 data-en="Example 4: Less than 1 Year" data-ar="مثال 4: أقل من سنة">Example 4: Less than 1 Year</h4>
+                                        <p data-en="Any contract, 8 months, any reason, AED 12,000" data-ar="أي عقد، 8 أشهر، أي سبب، 12,000 درهم">Any contract, 8 months, any reason, AED 12,000</p>
+                                        <span class="example-result">AED 0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="card results-card" style="animation-delay: 0.2s;">
+                <div class="card-header">
+                    <h2>
+                        <span>💰</span>
+                        <span data-en="Estimated Results" data-ar="النتائج التقديرية">Estimated Results</span>
+                    </h2>
+                    <p data-en="AI-calculated estimate only - verify with HR" data-ar="تقدير محسوب بالذكاء الاصطناعي فقط - تحقق مع الموارد البشرية">AI-calculated estimate only - verify with HR</p>
+                </div>
+                <div class="card-body" id="resultsBody">
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-state-icon">📊</div>
+                        <h3 data-en="Enter your details" data-ar="أدخل بياناتك">Enter your details</h3>
+                        <p data-en="Fill in the form to calculate your end-of-service gratuity" data-ar="املأ النموذج لحساب مكافأة نهاية الخدمة الخاصة بك">Fill in the form to calculate your end-of-service gratuity</p>
+                    </div>
+                    
+                    <div id="resultsContent" style="display: none;">
+                        <!-- Total Amount -->
+                        <div class="result-amount">
+                            <div class="estimate-label" data-en="⚡ ESTIMATED AMOUNT" data-ar="⚡ المبلغ التقديري">⚡ ESTIMATED AMOUNT</div>
+                            <div class="result-label" data-en="Total Gratuity" data-ar="إجمالي المكافأة">Total Gratuity</div>
+                            <div class="result-value">
+                                <span id="totalAmount">0</span>
+                                <span class="result-currency">AED</span>
+                            </div>
+                            <div class="result-note" id="reductionNote"></div>
+                        </div>
+
+                        <!-- Breakdown -->
+                        <div class="breakdown">
+                            <h3>
+                                <span>📐</span>
+                                <span data-en="Calculation Breakdown" data-ar="تفاصيل الحساب">Calculation Breakdown</span>
+                            </h3>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label" data-en="Daily Wage (Salary ÷ 30)" data-ar="الأجر اليومي (الراتب ÷ 30)">Daily Wage (Salary ÷ 30)</span>
+                                <span class="breakdown-value" id="dailyWage">AED 0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label" data-en="Service Duration" data-ar="مدة الخدمة">Service Duration</span>
+                                <span class="breakdown-value" id="serviceDuration">0 years</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label" data-en="Rate Applied" data-ar="المعدل المطبق">Rate Applied</span>
+                                <span class="breakdown-value" id="rateApplied">21 days/year</span>
+                            </div>
+                            <div class="breakdown-item" id="reductionRow" style="display: none;">
+                                <span class="breakdown-label" data-en="Reduction Factor" data-ar="عامل التخفيض">Reduction Factor</span>
+                                <span class="breakdown-value" id="reductionFactor">100%</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label" data-en="Base Gratuity" data-ar="المكافأة الأساسية">Base Gratuity</span>
+                                <span class="breakdown-value" id="baseGratuity">AED 0</span>
+                            </div>
+                            <div class="breakdown-item" id="capRow" style="display: none;">
+                                <span class="breakdown-label" data-en="2-Year Salary Cap" data-ar="الحد الأقصى (سنتين راتب)">2-Year Salary Cap</span>
+                                <span class="breakdown-value" id="salaryCap">AED 0</span>
+                            </div>
+                            <div class="breakdown-formula" id="formula"></div>
+                        </div>
+
+                        <!-- Legal Reference -->
+                        <div class="legal-ref">
+                            <strong data-en="Legal Reference:" data-ar="المرجع القانوني:">Legal Reference:</strong>
+                            <span id="legalRef" data-en="Articles 51-53 of Federal Decree-Law No. 33 of 2021" data-ar="المواد 51-53 من المرسوم بقانون اتحادي رقم 33 لسنة 2021">Articles 51-53 of Federal Decree-Law No. 33 of 2021</span>
+                        </div>
+
+                        <!-- Assumptions -->
+                        <div class="breakdown" style="background: rgba(0, 212, 170, 0.05);">
+                            <h3>
+                                <span>ℹ️</span>
+                                <span data-en="Assumptions Used" data-ar="الافتراضات المستخدمة">Assumptions Used</span>
+                            </h3>
+                            <ul id="assumptions" style="padding-left: 1.25rem; margin: 0; font-size: 0.9rem; color: var(--text-muted);">
+                            </ul>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary btn-small" onclick="printResults()">
+                                <span>🖨️</span>
+                                <span data-en="Print" data-ar="طباعة">Print</span>
+                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="exportPDF()">
+                                <span>📄</span>
+                                <span data-en="Save PDF" data-ar="حفظ PDF">Save PDF</span>
+                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="resetCalculator()">
+                                <span>🔄</span>
+                                <span data-en="Reset" data-ar="إعادة تعيين">Reset</span>
+                            </button>
+                        </div>
+
+                        <!-- Results Disclaimer Reminder -->
+                        <div class="results-disclaimer">
+                            <span class="results-disclaimer-icon">ℹ️</span>
+                            <span data-en="This is an AI-generated estimate. Please verify with your HR department for official calculations." data-ar="هذا تقدير تم إنشاؤه بالذكاء الاصطناعي. يرجى التحقق من قسم الموارد البشرية للحسابات الرسمية.">This is an AI-generated estimate. Please verify with your HR department for official calculations.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Section -->
+        <div class="collapsible" id="infoCollapsible" style="margin-top: 2rem;">
+            <div class="collapsible-header" onclick="toggleCollapsible('infoCollapsible')">
+                <span data-en="📚 Important Information & Definitions" data-ar="📚 معلومات وتعريفات مهمة">📚 Important Information & Definitions</span>
+                <span class="collapsible-icon">▼</span>
+            </div>
+            <div class="collapsible-content">
+                <div class="collapsible-body">
+                    <h4 data-en="What is Basic Salary?" data-ar="ما هو الراتب الأساسي؟">What is Basic Salary?</h4>
+                    <p data-en="Basic salary is the fixed monthly wage stated in your employment contract, excluding:" data-ar="الراتب الأساسي هو الأجر الشهري الثابت المذكور في عقد العمل، باستثناء:">Basic salary is the fixed monthly wage stated in your employment contract, excluding:</p>
+                    <ul>
+                        <li data-en="Housing allowance" data-ar="بدل السكن">Housing allowance</li>
+                        <li data-en="Transportation allowance" data-ar="بدل المواصلات">Transportation allowance</li>
+                        <li data-en="Bonuses and commissions" data-ar="المكافآت والعمولات">Bonuses and commissions</li>
+                        <li data-en="Overtime payments" data-ar="مدفوعات العمل الإضافي">Overtime payments</li>
+                        <li data-en="Any other variable compensation" data-ar="أي تعويض متغير آخر">Any other variable compensation</li>
+                    </ul>
+
+                    <h4 data-en="Continuous Service" data-ar="الخدمة المستمرة">Continuous Service</h4>
+                    <p data-en="Service is considered continuous if there are no breaks in employment. Authorized leave (annual, sick, maternity) does not break continuity. Unpaid leave may or may not be included depending on employer approval." data-ar="تعتبر الخدمة مستمرة إذا لم يكن هناك انقطاع في العمل. الإجازات المصرح بها (سنوية، مرضية، أمومة) لا تقطع الاستمرارية. الإجازة غير مدفوعة الأجر قد تُحتسب أو لا تُحتسب حسب موافقة صاحب العمل.">Service is considered continuous if there are no breaks in employment. Authorized leave (annual, sick, maternity) does not break continuity. Unpaid leave may or may not be included depending on employer approval.</p>
+
+                    <h4 data-en="Free Zone Variations" data-ar="اختلافات المناطق الحرة">Free Zone Variations</h4>
+                    <p data-en="DIFC (Dubai International Financial Centre) and ADGM (Abu Dhabi Global Market) have their own employment regulations that may differ from federal UAE labor law. Employees in these zones should consult their specific free zone employment regulations." data-ar="مركز دبي المالي العالمي (DIFC) وسوق أبوظبي العالمي (ADGM) لديهما لوائح توظيف خاصة بهما قد تختلف عن قانون العمل الاتحادي الإماراتي. يجب على الموظفين في هذه المناطق مراجعة لوائح التوظيف الخاصة بمنطقتهم الحرة.">DIFC (Dubai International Financial Centre) and ADGM (Abu Dhabi Global Market) have their own employment regulations that may differ from federal UAE labor law. Employees in these zones should consult their specific free zone employment regulations.</p>
+
+                    <h4 data-en="Article 44 - Gross Misconduct" data-ar="المادة 44 - سوء السلوك الجسيم">Article 44 - Gross Misconduct</h4>
+                    <p data-en="If an employee is terminated under Article 44 for gross misconduct (e.g., fraud, assault, safety violations), they may forfeit their gratuity entitlement entirely." data-ar="إذا تم إنهاء خدمة الموظف بموجب المادة 44 بسبب سوء السلوك الجسيم (مثل الاحتيال أو الاعتداء أو انتهاكات السلامة)، فقد يفقد استحقاقه للمكافأة بالكامل.">If an employee is terminated under Article 44 for gross misconduct (e.g., fraud, assault, safety violations), they may forfeit their gratuity entitlement entirely.</p>
+
+                    <h4 data-en="2-Year Salary Cap" data-ar="الحد الأقصى لراتب سنتين">2-Year Salary Cap</h4>
+                    <p data-en="The total gratuity amount cannot exceed the equivalent of 2 years' basic salary (24 months), regardless of how long you have worked." data-ar="لا يمكن أن يتجاوز إجمالي مبلغ المكافأة ما يعادل راتب سنتين أساسي (24 شهراً)، بغض النظر عن مدة العمل.">The total gratuity amount cannot exceed the equivalent of 2 years' basic salary (24 months), regardless of how long you have worked.</p>
+
+                    <h4 data-en="Useful Resources" data-ar="موارد مفيدة">Useful Resources</h4>
+                    <ul>
+                        <li><a href="https://www.mohre.gov.ae" target="_blank" rel="noopener">MOHRE Official Website</a></li>
+                        <li><a href="https://www.mohre.gov.ae/en/services/enquiry-services/end-of-service-benefits.aspx" target="_blank" rel="noopener">MOHRE End of Service Calculator</a></li>
+                    </ul>
+
+                    <h4 data-en="Dispute Resolution" data-ar="حل النزاعات">Dispute Resolution</h4>
+                    <p data-en="For disputes regarding gratuity payments, you can file a complaint with MOHRE through their website, app, or by calling 600-590-000." data-ar="للنزاعات المتعلقة بمدفوعات المكافأة، يمكنك تقديم شكوى إلى وزارة الموارد البشرية والتوطين من خلال موقعهم الإلكتروني أو التطبيق أو الاتصال على 600-590-000.">For disputes regarding gratuity payments, you can file a complaint with MOHRE through their website, app, or by calling 600-590-000.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comprehensive Disclaimer Section -->
+        <div class="disclaimer-section">
+            <div class="disclaimer-header">
+                <span class="disclaimer-header-icon">⚖️</span>
+                <h3 data-en="Legal Disclaimer & Important Notices" data-ar="إخلاء المسؤولية القانونية والإشعارات المهمة">Legal Disclaimer & Important Notices</h3>
+            </div>
+            
+            <div class="disclaimer-grid">
+                <div class="disclaimer-card ai-warning">
+                    <div class="disclaimer-card-icon">🤖</div>
+                    <h4 data-en="AI-Powered Estimation" data-ar="تقدير بالذكاء الاصطناعي">AI-Powered Estimation</h4>
+                    <p data-en="This calculator uses AI-based algorithms for estimation purposes only. Results are approximate and may contain errors or inaccuracies. Do NOT rely solely on these calculations for financial decisions." data-ar="تستخدم هذه الحاسبة خوارزميات الذكاء الاصطناعي لأغراض التقدير فقط. النتائج تقريبية وقد تحتوي على أخطاء أو عدم دقة. لا تعتمد فقط على هذه الحسابات لاتخاذ القرارات المالية.">This calculator uses AI-based algorithms for estimation purposes only. Results are approximate and may contain errors or inaccuracies. Do NOT rely solely on these calculations for financial decisions.</p>
+                </div>
+
+                <div class="disclaimer-card hr-consult">
+                    <div class="disclaimer-card-icon">👥</div>
+                    <h4 data-en="Consult Your HR Department" data-ar="استشر قسم الموارد البشرية">Consult Your HR Department</h4>
+                    <p data-en="For official gratuity calculations, always consult your company's HR department or payroll team. They have access to your complete employment records and company-specific policies." data-ar="للحصول على حسابات المكافأة الرسمية، استشر دائماً قسم الموارد البشرية أو فريق الرواتب في شركتك. لديهم حق الوصول إلى سجلات التوظيف الكاملة وسياسات الشركة الخاصة.">For official gratuity calculations, always consult your company's HR department or payroll team. They have access to your complete employment records and company-specific policies.</p>
+                </div>
+
+                <div class="disclaimer-card legal-check">
+                    <div class="disclaimer-card-icon">📋</div>
+                    <h4 data-en="Verify Legal Updates" data-ar="تحقق من التحديثات القانونية">Verify Legal Updates</h4>
+                    <p data-en="UAE Labour Law may be amended from time to time. This calculator was last updated in December 2025 based on Federal Decree-Law No. 33 of 2021. Please verify with MOHRE or legal counsel for any recent changes." data-ar="قد يتم تعديل قانون العمل الإماراتي من وقت لآخر. تم تحديث هذه الحاسبة آخر مرة في ديسمبر 2025 بناءً على المرسوم بقانون اتحادي رقم 33 لسنة 2021. يرجى التحقق مع وزارة الموارد البشرية أو المستشار القانوني بشأن أي تغييرات حديثة.">UAE Labour Law may be amended from time to time. This calculator was last updated in December 2025 based on Federal Decree-Law No. 33 of 2021. Please verify with MOHRE or legal counsel for any recent changes.</p>
+                </div>
+
+                <div class="disclaimer-card no-liability">
+                    <div class="disclaimer-card-icon">🚫</div>
+                    <h4 data-en="No Liability" data-ar="عدم المسؤولية">No Liability</h4>
+                    <p data-en="The creators of this tool accept no liability for any errors, omissions, or discrepancies in the calculations. Use at your own risk. This is not legal or financial advice." data-ar="لا يتحمل منشئو هذه الأداة أي مسؤولية عن أي أخطاء أو سهو أو تناقضات في الحسابات. الاستخدام على مسؤوليتك الخاصة. هذه ليست نصيحة قانونية أو مالية.">The creators of this tool accept no liability for any errors, omissions, or discrepancies in the calculations. Use at your own risk. This is not legal or financial advice.</p>
+                </div>
+            </div>
+
+            <div class="disclaimer-footer">
+                <p>
+                    <strong data-en="For Official Information:" data-ar="للمعلومات الرسمية:">For Official Information:</strong>
+                    <a href="https://www.mohre.gov.ae" target="_blank" rel="noopener">MOHRE Website</a> |
+                    <span data-en="Hotline: 600-590-000" data-ar="الخط الساخن: 600-590-000">Hotline: 600-590-000</span>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p data-en="© 2025 UAE Gratuity Calculator • AI-Powered Estimation Tool • Last Updated: December 2025" data-ar="© 2025 حاسبة مكافأة نهاية الخدمة الإماراتية • أداة تقدير بالذكاء الاصطناعي • آخر تحديث: ديسمبر 2025">© 2025 UAE Gratuity Calculator • AI-Powered Estimation Tool • Last Updated: December 2025</p>
+        <p data-en="Based on Federal Decree-Law No. 33 of 2021. For official calculations, consult your HR department." data-ar="بناءً على المرسوم بقانون اتحادي رقم 33 لسنة 2021. للحسابات الرسمية، استشر قسم الموارد البشرية.">Based on Federal Decree-Law No. 33 of 2021. For official calculations, consult your HR department.</p>
+        <p><a href="https://www.mohre.gov.ae" target="_blank" rel="noopener">MOHRE Official Website</a> | <span data-en="Hotline: 600-590-000" data-ar="الخط الساخن: 600-590-000">Hotline: 600-590-000</span></p>
+    </footer>
+
+    <script>
+        // =====================================================
+        // UAE GRATUITY CALCULATOR - CALCULATION LOGIC
+        // Based on Federal Decree-Law No. 33 of 2021
+        // =====================================================
+
+        /**
+         * Main calculation function for UAE End-of-Service Gratuity
+         * @param {Object} params - Input parameters
+         * @returns {Object} - Calculation results with breakdown
+         */
+        function calculateGratuity(params) {
+            const {
+                contractType,      // 'limited' or 'unlimited'
+                terminationReason, // 'termination', 'resignation', 'completion', 'death', 'article44'
+                years,             // Number of complete years
+                months,            // Additional months
+                days = 0,          // Additional days
+                salary,            // Monthly basic salary in AED
+                fromDates,         // Whether calculated from dates
+                joiningDate,       // Original joining date (if from dates)
+                lastDate           // Original last date (if from dates)
+            } = params;
+
+            // Initialize result object
+            const result = {
+                totalGratuity: 0,
+                dailyWage: 0,
+                totalYears: 0,
+                baseGratuity: 0,
+                reductionFactor: 1,
+                reductionLabel: '',
+                salaryCap: 0,
+                isCapApplied: false,
+                rateDetails: '',
+                formula: '',
+                assumptions: [],
+                legalRef: 'Articles 51-53 of Federal Decree-Law No. 33 of 2021',
+                eligible: true,
+                eligibilityNote: '',
+                serviceDuration: {
+                    years,
+                    months,
+                    days,
+                    displayText: ''
+                }
+            };
+
+            // Calculate daily wage (salary ÷ 30 as per UAE law)
+            result.dailyWage = salary / 30;
+
+            // Calculate total service in years (with fractional months and days)
+            result.totalYears = years + (months / 12) + (days / 365);
+            
+            // Format service duration for display
+            if (fromDates) {
+                result.serviceDuration.displayText = currentLang === 'ar'
+                    ? `${years} سنة، ${months} شهر، ${days} يوم`
+                    : `${years} years, ${months} months, ${days} days`;
+            } else {
+                result.serviceDuration.displayText = currentLang === 'ar'
+                    ? `${years} سنة، ${months} شهر`
+                    : `${years} years, ${months} months`;
+            }
+
+            // Check minimum service requirement
+            if (result.totalYears < 1) {
+                result.eligible = false;
+                result.eligibilityNote = currentLang === 'ar' 
+                    ? 'لا يوجد استحقاق للمكافأة لخدمة أقل من سنة واحدة'
+                    : 'No gratuity entitlement for service less than 1 year';
+                result.assumptions.push(result.eligibilityNote);
+                return result;
+            }
+
+            // Check Article 44 gross misconduct
+            if (terminationReason === 'article44') {
+                result.eligible = false;
+                result.eligibilityNote = currentLang === 'ar'
+                    ? 'لا يوجد استحقاق للمكافأة - الإنهاء بموجب المادة 44 (سوء السلوك الجسيم)'
+                    : 'No gratuity entitlement - Termination under Article 44 (Gross Misconduct)';
+                result.assumptions.push(result.eligibilityNote);
+                result.legalRef = 'Article 44 of Federal Decree-Law No. 33 of 2021';
+                return result;
+            }
+
+            // Calculate base gratuity based on service years
+            let gratuityAmount = 0;
+            let formulaParts = [];
+
+            if (result.totalYears <= 5) {
+                // First 5 years: 21 days per year
+                gratuityAmount = result.dailyWage * 21 * result.totalYears;
+                result.rateDetails = currentLang === 'ar' ? '21 يوم/سنة' : '21 days/year';
+                formulaParts.push(`${formatCurrency(result.dailyWage)} × 21 × ${result.totalYears.toFixed(4)}`);
+            } else {
+                // First 5 years at 21 days, remaining at 30 days
+                const first5Years = result.dailyWage * 21 * 5;
+                const remainingYears = result.totalYears - 5;
+                const afterFirst5 = result.dailyWage * 30 * remainingYears;
+                gratuityAmount = first5Years + afterFirst5;
+                result.rateDetails = currentLang === 'ar' 
+                    ? '21 يوم/سنة (أول 5 سنوات) + 30 يوم/سنة (بعدها)'
+                    : '21 days/year (first 5 yrs) + 30 days/year (after)';
+                formulaParts.push(`(${formatCurrency(result.dailyWage)} × 21 × 5) + (${formatCurrency(result.dailyWage)} × 30 × ${remainingYears.toFixed(4)})`);
+            }
+
+            result.baseGratuity = gratuityAmount;
+
+            // Apply reduction for resignation (if applicable)
+            if (terminationReason === 'resignation') {
+                if (result.totalYears >= 1 && result.totalYears < 3) {
+                    // 1-3 years: 1/3 of entitlement
+                    result.reductionFactor = 1/3;
+                    result.reductionLabel = currentLang === 'ar' ? '1/3 (1-3 سنوات)' : '1/3 (1-3 years)';
+                } else if (result.totalYears >= 3 && result.totalYears < 5) {
+                    // 3-5 years: 2/3 of entitlement
+                    result.reductionFactor = 2/3;
+                    result.reductionLabel = currentLang === 'ar' ? '2/3 (3-5 سنوات)' : '2/3 (3-5 years)';
+                } else if (result.totalYears >= 5) {
+                    // After 5 years: Full entitlement
+                    result.reductionFactor = 1;
+                    result.reductionLabel = currentLang === 'ar' ? 'كامل (أكثر من 5 سنوات)' : 'Full (5+ years)';
+                }
+
+                if (result.reductionFactor < 1) {
+                    result.assumptions.push(currentLang === 'ar'
+                        ? `تم تطبيق تخفيض الاستقالة: ${(result.reductionFactor * 100).toFixed(0)}% من المكافأة`
+                        : `Resignation reduction applied: ${(result.reductionFactor * 100).toFixed(0)}% of base gratuity`);
+                }
+            }
+
+            // Death of employee: Full entitlement regardless of service
+            if (terminationReason === 'death') {
+                result.reductionFactor = 1;
+                result.reductionLabel = currentLang === 'ar' ? 'كامل (وفاة)' : 'Full (Death)';
+                result.assumptions.push(currentLang === 'ar'
+                    ? 'استحقاق كامل بسبب وفاة الموظف'
+                    : 'Full entitlement due to employee death');
+                result.legalRef = 'Article 51 of Federal Decree-Law No. 33 of 2021';
+            }
+
+            // Apply reduction factor
+            gratuityAmount = gratuityAmount * result.reductionFactor;
+
+            // Apply 2-year salary cap
+            result.salaryCap = salary * 24; // 2 years = 24 months
+            if (gratuityAmount > result.salaryCap) {
+                result.isCapApplied = true;
+                gratuityAmount = result.salaryCap;
+                result.assumptions.push(currentLang === 'ar'
+                    ? 'تم تطبيق الحد الأقصى لراتب سنتين'
+                    : '2-year salary cap applied');
+            }
+
+            result.totalGratuity = Math.round(gratuityAmount * 100) / 100; // Round to 2 decimals
+
+            // Build formula string
+            let formulaStr = formulaParts.join(' + ');
+            if (result.reductionFactor < 1) {
+                formulaStr = `(${formulaStr}) × ${result.reductionFactor.toFixed(2)}`;
+            }
+            if (result.isCapApplied) {
+                formulaStr += ` → ${currentLang === 'ar' ? 'محدد بـ' : 'capped at'} ${formatCurrency(result.salaryCap)}`;
+            }
+            result.formula = formulaStr + ` = ${formatCurrency(result.totalGratuity)}`;
+
+            // Add standard assumptions
+            result.assumptions.unshift(currentLang === 'ar'
+                ? 'الأجر اليومي = الراتب الأساسي الشهري ÷ 30'
+                : 'Daily wage = Monthly basic salary ÷ 30');
+            
+            if (fromDates) {
+                result.assumptions.push(currentLang === 'ar'
+                    ? `تم حساب مدة الخدمة من ${joiningDate} إلى ${lastDate}`
+                    : `Service duration calculated from ${joiningDate} to ${lastDate}`);
+            }
+            
+            result.assumptions.push(currentLang === 'ar'
+                ? 'تم احتساب الخدمة كفترة متواصلة'
+                : 'Service calculated as continuous period');
+
+            return result;
+        }
+
+        // =====================================================
+        // UI HELPER FUNCTIONS
+        // =====================================================
+
+        let currentLang = 'en';
+
+        /**
+         * Format number as currency with proper AED formatting
+         */
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat(currentLang === 'ar' ? 'ar-AE' : 'en-AE', {
+                style: 'decimal',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        /**
+         * Calculate exact service duration between two dates
+         * Returns years, months, days, and total days
+         */
+        function calculateServiceDuration(joiningDate, lastDate) {
+            const start = new Date(joiningDate);
+            const end = new Date(lastDate);
+            
+            if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+                return null;
+            }
+            
+            if (end < start) {
+                return null;
+            }
+
+            // Calculate difference
+            let years = end.getFullYear() - start.getFullYear();
+            let months = end.getMonth() - start.getMonth();
+            let days = end.getDate() - start.getDate();
+
+            // Adjust for negative days
+            if (days < 0) {
+                months--;
+                // Get days in previous month
+                const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+
+            // Adjust for negative months
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // Calculate total days for reference
+            const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1; // +1 to include last day
+
+            return {
+                years,
+                months,
+                days,
+                totalDays,
+                // For calculation purposes: convert to decimal years
+                decimalYears: years + (months / 12) + (days / 365)
+            };
+        }
+
+        /**
+         * Update the calculated duration display
+         */
+        function updateDurationDisplay() {
+            const joiningDate = document.getElementById('joiningDate').value;
+            const lastDate = document.getElementById('lastDate').value;
+            const displayEl = document.getElementById('calculatedDuration');
+            
+            if (!joiningDate || !lastDate) {
+                displayEl.style.display = 'none';
+                return;
+            }
+
+            const duration = calculateServiceDuration(joiningDate, lastDate);
+            
+            if (!duration) {
+                displayEl.style.display = 'none';
+                showError('joiningDate', currentLang === 'ar' 
+                    ? 'تاريخ الالتحاق يجب أن يكون قبل آخر يوم عمل' 
+                    : 'Joining date must be before last working date');
+                return;
+            }
+
+            clearErrors();
+            displayEl.style.display = 'block';
+
+            document.getElementById('calculatedYears').textContent = duration.years;
+            document.getElementById('calculatedMonths').textContent = duration.months;
+            document.getElementById('calculatedDays').textContent = duration.days;
+            
+            const totalDaysText = currentLang === 'ar'
+                ? `إجمالي ${duration.totalDays.toLocaleString('ar-AE')} يوم من الخدمة`
+                : `Total ${duration.totalDays.toLocaleString('en-AE')} days of service`;
+            document.getElementById('totalDaysDisplay').textContent = totalDaysText;
+
+            // Auto-trigger calculation if salary is filled
+            const salary = document.getElementById('salary').value;
+            if (salary) {
+                calculateAndDisplay();
+            }
+        }
+
+        /**
+         * Toggle between date-based and manual duration input
+         */
+        function toggleDurationMethod(method) {
+            const dateSection = document.getElementById('dateInputSection');
+            const manualSection = document.getElementById('manualInputSection');
+
+            if (method === 'dates') {
+                dateSection.style.display = 'block';
+                manualSection.style.display = 'none';
+                // Trigger calculation if dates are filled
+                updateDurationDisplay();
+            } else {
+                dateSection.style.display = 'none';
+                manualSection.style.display = 'block';
+            }
+        }
+
+        /**
+         * Get current duration values (from dates or manual input)
+         */
+        function getCurrentDuration() {
+            const method = document.querySelector('input[name="durationMethod"]:checked')?.value || 'dates';
+            
+            if (method === 'dates') {
+                const joiningDate = document.getElementById('joiningDate').value;
+                const lastDate = document.getElementById('lastDate').value;
+                
+                if (joiningDate && lastDate) {
+                    const duration = calculateServiceDuration(joiningDate, lastDate);
+                    if (duration) {
+                        return {
+                            years: duration.years,
+                            months: duration.months,
+                            days: duration.days,
+                            totalYears: duration.decimalYears,
+                            fromDates: true,
+                            joiningDate,
+                            lastDate
+                        };
+                    }
+                }
+                return null;
+            } else {
+                const years = parseInt(document.getElementById('years').value) || 0;
+                const months = parseInt(document.getElementById('months').value) || 0;
+                return {
+                    years,
+                    months,
+                    days: 0,
+                    totalYears: years + (months / 12),
+                    fromDates: false
+                };
+            }
+        }
+
+        /**
+         * Set today's date as default for last working date
+         */
+        function setDefaultLastDate() {
+            const lastDateInput = document.getElementById('lastDate');
+            const today = new Date().toISOString().split('T')[0];
+            lastDateInput.value = today;
+        }
+
+        /**
+         * Toggle collapsible sections
+         */
+        function toggleCollapsible(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('open');
+        }
+
+        /**
+         * Switch language between English and Arabic
+         */
+        function switchLanguage(lang) {
+            currentLang = lang;
+            document.body.classList.toggle('rtl', lang === 'ar');
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+            // Update all text elements
+            document.querySelectorAll('[data-en][data-ar]').forEach(el => {
+                el.textContent = el.getAttribute(`data-${lang}`);
+            });
+
+            // Update active language button
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+
+            // Update placeholders
+            document.getElementById('years').placeholder = lang === 'ar' ? 'السنوات' : 'Years';
+            document.getElementById('months').placeholder = lang === 'ar' ? 'الأشهر' : 'Months';
+            document.getElementById('salary').placeholder = lang === 'ar' ? '10,000' : '10,000';
+
+            // Save preference
+            localStorage.setItem('uaeGratuityLang', lang);
+
+            // Recalculate if form has values
+            const form = document.getElementById('gratuityForm');
+            if (form.salary.value && (form.years.value || form.months.value)) {
+                calculateAndDisplay();
+            }
+        }
+
+        /**
+         * Load example scenario
+         */
+        function loadExample(num) {
+            const examples = {
+                1: { contractType: 'limited', terminationReason: 'termination', years: 4, months: 0, salary: 10000 },
+                2: { contractType: 'limited', terminationReason: 'resignation', years: 7, months: 0, salary: 15000 },
+                3: { contractType: 'unlimited', terminationReason: 'resignation', years: 2, months: 0, salary: 8000 },
+                4: { contractType: 'limited', terminationReason: 'termination', years: 0, months: 8, salary: 12000 }
+            };
+
+            const ex = examples[num];
+            if (!ex) return;
+
+            // Switch to manual input mode for examples
+            document.getElementById('methodManual').checked = true;
+            toggleDurationMethod('manual');
+
+            document.querySelector(`input[name="contractType"][value="${ex.contractType}"]`).checked = true;
+            document.getElementById('terminationReason').value = ex.terminationReason;
+            document.getElementById('years').value = ex.years;
+            document.getElementById('months').value = ex.months;
+            document.getElementById('salary').value = ex.salary;
+
+            calculateAndDisplay();
+        }
+
+        /**
+         * Calculate and display results
+         */
+        function calculateAndDisplay() {
+            const form = document.getElementById('gratuityForm');
+            
+            // Get duration from current method
+            const duration = getCurrentDuration();
+            
+            if (!duration) {
+                showError('joiningDate', currentLang === 'ar' 
+                    ? 'يرجى إدخال تواريخ صالحة' 
+                    : 'Please enter valid dates');
+                return;
+            }
+
+            const salary = parseFloat(form.salary.value) || 0;
+
+            // Validate salary
+            if (salary <= 0) {
+                showError('salary', currentLang === 'ar' ? 'يرجى إدخال راتب صالح' : 'Please enter a valid salary');
+                return;
+            }
+
+            // Validate duration
+            if (duration.totalYears <= 0 && !duration.fromDates) {
+                showError('years', currentLang === 'ar' ? 'يرجى إدخال مدة خدمة صالحة' : 'Please enter valid service duration');
+                return;
+            }
+
+            clearErrors();
+
+            const params = {
+                contractType: form.querySelector('input[name="contractType"]:checked')?.value || 'limited',
+                terminationReason: form.terminationReason.value,
+                years: duration.years,
+                months: duration.months,
+                days: duration.days || 0,
+                salary: salary,
+                fromDates: duration.fromDates,
+                joiningDate: duration.joiningDate,
+                lastDate: duration.lastDate
+            };
+
+            // Calculate
+            const result = calculateGratuity(params);
+
+            // Display results
+            displayResults(result, params);
+
+            // Save to local storage
+            saveCalculation(params, result);
+        }
+
+        /**
+         * Display calculation results
+         */
+        function displayResults(result, params) {
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('resultsContent').style.display = 'block';
+
+            // Total amount
+            document.getElementById('totalAmount').textContent = formatCurrency(result.totalGratuity);
+
+            // Reduction note
+            const reductionNote = document.getElementById('reductionNote');
+            if (!result.eligible) {
+                reductionNote.innerHTML = `<span class="reduction-badge">${result.eligibilityNote}</span>`;
+            } else if (result.reductionFactor < 1) {
+                reductionNote.innerHTML = `<span class="reduction-badge">${currentLang === 'ar' ? 'تخفيض الاستقالة:' : 'Resignation Reduction:'} ${result.reductionLabel}</span>`;
+            } else {
+                reductionNote.innerHTML = `<span class="reduction-badge full-badge">${currentLang === 'ar' ? 'استحقاق كامل' : 'Full Entitlement'}</span>`;
+            }
+
+            // Breakdown
+            document.getElementById('dailyWage').textContent = `AED ${formatCurrency(result.dailyWage)}`;
+            
+            // Service duration - show detailed breakdown if from dates
+            const serviceDurationText = result.serviceDuration?.displayText || 
+                (currentLang === 'ar' 
+                    ? `${result.totalYears.toFixed(2)} سنة`
+                    : `${result.totalYears.toFixed(2)} years`);
+            document.getElementById('serviceDuration').textContent = serviceDurationText;
+            
+            document.getElementById('rateApplied').textContent = result.rateDetails || (currentLang === 'ar' ? '21 يوم/سنة' : '21 days/year');
+            document.getElementById('baseGratuity').textContent = `AED ${formatCurrency(result.baseGratuity)}`;
+
+            // Reduction row
+            const reductionRow = document.getElementById('reductionRow');
+            if (result.reductionFactor < 1) {
+                reductionRow.style.display = 'flex';
+                document.getElementById('reductionFactor').textContent = `${(result.reductionFactor * 100).toFixed(0)}%`;
+            } else {
+                reductionRow.style.display = 'none';
+            }
+
+            // Cap row
+            const capRow = document.getElementById('capRow');
+            if (result.isCapApplied) {
+                capRow.style.display = 'flex';
+                document.getElementById('salaryCap').textContent = `AED ${formatCurrency(result.salaryCap)}`;
+            } else {
+                capRow.style.display = 'none';
+            }
+
+            // Formula
+            document.getElementById('formula').textContent = result.formula;
+
+            // Assumptions
+            const assumptionsList = document.getElementById('assumptions');
+            assumptionsList.innerHTML = result.assumptions.map(a => `<li>${a}</li>`).join('');
+
+            // Legal reference
+            document.getElementById('legalRef').textContent = result.legalRef;
+        }
+
+        /**
+         * Show error on input
+         */
+        function showError(inputId, message) {
+            const input = document.getElementById(inputId);
+            input.classList.add('input-error');
+            
+            let errorEl = input.parentElement.querySelector('.error-message');
+            if (!errorEl) {
+                errorEl = document.createElement('div');
+                errorEl.className = 'error-message';
+                input.parentElement.appendChild(errorEl);
+            }
+            errorEl.textContent = message;
+        }
+
+        /**
+         * Clear all errors
+         */
+        function clearErrors() {
+            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+        }
+
+        /**
+         * Save calculation to local storage
+         */
+        function saveCalculation(params, result) {
+            const calculations = JSON.parse(localStorage.getItem('uaeGratuityCalculations') || '[]');
+            calculations.unshift({
+                date: new Date().toISOString(),
+                params,
+                result: {
+                    totalGratuity: result.totalGratuity,
+                    eligible: result.eligible
+                }
+            });
+            // Keep only last 10 calculations
+            localStorage.setItem('uaeGratuityCalculations', JSON.stringify(calculations.slice(0, 10)));
+        }
+
+        /**
+         * Reset calculator
+         */
+        function resetCalculator() {
+            document.getElementById('gratuityForm').reset();
+            
+            // Reset to date-based input
+            document.getElementById('methodDates').checked = true;
+            toggleDurationMethod('dates');
+            
+            // Set default last date to today
+            setDefaultLastDate();
+            
+            // Hide calculated duration display
+            document.getElementById('calculatedDuration').style.display = 'none';
+            
+            // Show empty state
+            document.getElementById('emptyState').style.display = 'block';
+            document.getElementById('resultsContent').style.display = 'none';
+            clearErrors();
+        }
+
+        /**
+         * Print results
+         */
+        function printResults() {
+            window.print();
+        }
+
+        /**
+         * Export to PDF (using print dialog)
+         */
+        function exportPDF() {
+            // Note: For a production app, you'd use a library like jsPDF or html2pdf
+            // For now, we use the browser's print-to-PDF functionality
+            alert(currentLang === 'ar' 
+                ? 'استخدم خيار "حفظ كـ PDF" في نافذة الطباعة'
+                : 'Use "Save as PDF" option in the print dialog');
+            window.print();
+        }
+
+        // =====================================================
+        // EVENT LISTENERS & INITIALIZATION
+        // =====================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set default last working date to today
+            setDefaultLastDate();
+
+            // Load saved language preference
+            const savedLang = localStorage.getItem('uaeGratuityLang');
+            if (savedLang) {
+                switchLanguage(savedLang);
+            }
+
+            // Language toggle buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => switchLanguage(btn.dataset.lang));
+            });
+
+            // Duration method toggle
+            document.querySelectorAll('input[name="durationMethod"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    toggleDurationMethod(e.target.value);
+                });
+            });
+
+            // Date inputs - calculate duration on change
+            document.getElementById('joiningDate').addEventListener('change', updateDurationDisplay);
+            document.getElementById('lastDate').addEventListener('change', updateDurationDisplay);
+
+            // Form submission
+            document.getElementById('gratuityForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                calculateAndDisplay();
+            });
+
+            // Real-time calculation on input change
+            const formInputs = document.querySelectorAll('#gratuityForm input[type="number"], #gratuityForm select, #gratuityForm input[name="contractType"], #gratuityForm input[name="terminationReason"]');
+            formInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    const salary = document.getElementById('salary').value;
+                    const method = document.querySelector('input[name="durationMethod"]:checked')?.value;
+                    
+                    if (salary) {
+                        if (method === 'dates') {
+                            const joiningDate = document.getElementById('joiningDate').value;
+                            const lastDate = document.getElementById('lastDate').value;
+                            if (joiningDate && lastDate) {
+                                calculateAndDisplay();
+                            }
+                        } else {
+                            const years = document.getElementById('years').value;
+                            const months = document.getElementById('months').value;
+                            if (years || months) {
+                                calculateAndDisplay();
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Keyboard accessibility for radio options
+            document.querySelectorAll('.radio-option label').forEach(label => {
+                label.setAttribute('tabindex', '0');
+                label.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        label.previousElementSibling.click();
+                    }
+                });
+            });
+
+            // Example cards keyboard accessibility
+            document.querySelectorAll('.example-card').forEach(card => {
+                card.setAttribute('tabindex', '0');
+                card.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        card.click();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
