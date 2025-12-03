@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Deprivation Wellness Tracking - Senthil's Portfolio</title>
+    <meta name="description" content="Track how sleep, age, and eating habits impact your health, skin, hair, and mental focus.">
+    
+    <!-- React and Babel -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Custom slider styles */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #7c3aed;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #7c3aed;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState } = React;
+        
+        // Lucide React Icons (inline SVG components)
+        const Moon = (props) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+            </svg>
+        );
+        
+        const Apple = (props) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                <path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"/>
+                <path d="M10 2c1 .5 2 2 2 5"/>
+            </svg>
+        );
+        
+        const TrendingUp = (props) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+                <polyline points="16 7 22 7 22 13"/>
+            </svg>
+        );
+        
+        const Heart = (props) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+        );
+        
+        const Brain = (props) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+                <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+            </svg>
+        );
+        
+        const Zap = (props) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+        );
+        
+        const Award = (props) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                <circle cx="12" cy="8" r="6"/>
+                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+            </svg>
+        );
+        
+        const User = (props) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+        );
+        
+        const Sparkles = (props) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+                <path d="M5 3v4"/>
+                <path d="M19 17v4"/>
+                <path d="M3 5h4"/>
+                <path d="M17 19h4"/>
+            </svg>
+        );
+        
+        const Wind = (props) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/>
+                <path d="M9.6 4.6A2 2 0 1 1 11 8H2"/>
+                <path d="M12.6 19.4A2 2 0 1 0 14 16H2"/>
+            </svg>
+        );
+
+        const TeenWellnessTracker = () => {
+          const [sleepTime, setSleepTime] = useState(22);
+          const [wakeTime, setWakeTime] = useState(7);
+          const [lateNightEating, setLateNightEating] = useState(false);
+          const [snackingTime, setSnackingTime] = useState(23);
+          const [age, setAge] = useState(16);
+
+          const formatTime = (hour) => {
+            const adjustedHour = hour >= 24 ? hour - 24 : hour;
+            if (adjustedHour === 0) return '12:00 AM';
+            if (adjustedHour === 12) return '12:00 PM';
+            if (adjustedHour < 12) return `${adjustedHour}:00 AM`;
+            return `${adjustedHour - 12}:00 PM`;
+          };
+
+          const calculateSleepHours = () => {
+            let hours = wakeTime - sleepTime;
+            if (hours < 0) hours += 24;
+            return hours;
+          };
+
+          const sleepHours = calculateSleepHours();
+          
+          const getSleepQuality = () => {
+            if (sleepHours >= 9) return { level: 'optimal', color: 'text-green-500', score: 100 };
+            if (sleepHours >= 8) return { level: 'good', color: 'text-blue-500', score: 85 };
+            if (sleepHours >= 7) return { level: 'adequate', color: 'text-yellow-500', score: 70 };
+            if (sleepHours >= 6) return { level: 'insufficient', color: 'text-orange-500', score: 50 };
+            return { level: 'poor', color: 'text-red-500', score: 30 };
+          };
+
+          const sleepQuality = getSleepQuality();
+
+          const getMetabolismRate = () => {
+            let baseRate = 100;
+            if (age >= 18) baseRate = 95;
+            if (age >= 25) baseRate = 90;
+            if (age >= 30) baseRate = 85;
+            if (age >= 35) baseRate = 80;
+            if (age >= 40) baseRate = 75;
+            
+            if (sleepHours < 7) baseRate -= 10;
+            if (sleepHours < 6) baseRate -= 15;
+            if (lateNightEating) baseRate -= 12;
+            
+            return Math.max(40, baseRate);
+          };
+
+          const metabolismRate = getMetabolismRate();
+
+          const getPhysicalEffects = () => {
+            const effects = {
+              skin: { score: 100, status: 'Radiant', color: 'text-green-500' },
+              hair: { score: 100, status: 'Healthy & Strong', color: 'text-green-500' },
+              focus: { score: 100, status: 'Sharp', color: 'text-green-500' }
+            };
+
+            if (sleepHours < 8) {
+              effects.skin.score -= 20;
+              effects.hair.score -= 15;
+              effects.focus.score -= 25;
+            }
+            if (sleepHours < 7) {
+              effects.skin.score -= 20;
+              effects.hair.score -= 15;
+              effects.focus.score -= 20;
+            }
+            if (sleepHours < 6) {
+              effects.skin.score -= 20;
+              effects.hair.score -= 20;
+              effects.focus.score -= 25;
+            }
+
+            if (lateNightEating) {
+              effects.skin.score -= 15;
+              effects.hair.score -= 10;
+              effects.focus.score -= 10;
+              
+              const adjustedSleepTime = sleepTime >= 24 ? sleepTime - 24 : sleepTime;
+              const adjustedSnackingTime = snackingTime >= 24 ? snackingTime - 24 : snackingTime;
+              const timeDifference = Math.abs(adjustedSleepTime - adjustedSnackingTime);
+              if (timeDifference <= 2) {
+                effects.skin.score -= 10;
+                effects.hair.score -= 10;
+                effects.focus.score -= 15;
+              }
+            }
+
+            if (age >= 25) {
+              effects.skin.score -= 5;
+              effects.hair.score -= 3;
+            }
+            if (age >= 30) {
+              effects.skin.score -= 8;
+              effects.hair.score -= 5;
+            }
+            if (age >= 35) {
+              effects.skin.score -= 10;
+              effects.hair.score -= 8;
+            }
+
+            if (sleepTime > 24) {
+              effects.skin.score -= 10;
+              effects.hair.score -= 8;
+              effects.focus.score -= 12;
+            }
+
+            Object.keys(effects).forEach(key => {
+              const score = Math.max(0, effects[key].score);
+              effects[key].score = score;
+              
+              if (score >= 85) {
+                effects[key].status = key === 'skin' ? 'Radiant & Glowing' : key === 'hair' ? 'Healthy & Strong' : 'Sharp & Clear';
+                effects[key].color = 'text-green-500';
+              } else if (score >= 70) {
+                effects[key].status = key === 'skin' ? 'Good' : key === 'hair' ? 'Healthy' : 'Good';
+                effects[key].color = 'text-blue-500';
+              } else if (score >= 50) {
+                effects[key].status = key === 'skin' ? 'Dull & Tired' : key === 'hair' ? 'Dry & Brittle' : 'Foggy';
+                effects[key].color = 'text-yellow-500';
+              } else if (score >= 30) {
+                effects[key].status = key === 'skin' ? 'Pale & Lifeless' : key === 'hair' ? 'Thinning & Weak' : 'Very Poor';
+                effects[key].color = 'text-orange-500';
+              } else {
+                effects[key].status = key === 'skin' ? 'Severely Damaged' : key === 'hair' ? 'Severe Hair Loss' : 'Unable to Concentrate';
+                effects[key].color = 'text-red-500';
+              }
+            });
+
+            return effects;
+          };
+
+          const physicalEffects = getPhysicalEffects();
+
+          const getBenefits = () => {
+            const benefits = [];
+            
+            if (sleepHours >= 8) {
+              benefits.push({
+                icon: <Brain className="w-5 h-5" />,
+                title: 'Enhanced Learning',
+                description: 'Better memory consolidation and focus',
+                active: true
+              });
+              benefits.push({
+                icon: <Zap className="w-5 h-5" />,
+                title: 'Peak Energy',
+                description: 'Sustained energy throughout the day',
+                active: true
+              });
+              benefits.push({
+                icon: <Heart className="w-5 h-5" />,
+                title: 'Emotional Balance',
+                description: 'Better mood and stress management',
+                active: true
+              });
+            } else if (sleepHours >= 7) {
+              benefits.push({
+                icon: <Brain className="w-5 h-5" />,
+                title: 'Learning Ability',
+                description: 'Decent focus, but memory could be better',
+                active: true
+              });
+              benefits.push({
+                icon: <Zap className="w-5 h-5" />,
+                title: 'Moderate Energy',
+                description: 'May feel tired in the afternoon',
+                active: false
+              });
+            } else {
+              benefits.push({
+                icon: <Brain className="w-5 h-5" />,
+                title: 'Learning Impaired',
+                description: 'Difficulty concentrating and remembering',
+                active: false
+              });
+              benefits.push({
+                icon: <Zap className="w-5 h-5" />,
+                title: 'Low Energy',
+                description: 'Frequent fatigue and drowsiness',
+                active: false
+              });
+            }
+
+            if (!lateNightEating && sleepHours >= 7) {
+              benefits.push({
+                icon: <Apple className="w-5 h-5" />,
+                title: 'Healthy Metabolism',
+                description: 'Better digestion and weight management',
+                active: true
+              });
+            } else if (lateNightEating) {
+              benefits.push({
+                icon: <Apple className="w-5 h-5" />,
+                title: 'Digestive Stress',
+                description: 'Late eating disrupts sleep and metabolism',
+                active: false
+              });
+            }
+
+            return benefits;
+          };
+
+          const getHealthScore = () => {
+            let score = sleepQuality.score;
+            if (lateNightEating) {
+              score -= 15;
+              const adjustedSleepTime = sleepTime >= 24 ? sleepTime - 24 : sleepTime;
+              const adjustedSnackingTime = snackingTime >= 24 ? snackingTime - 24 : snackingTime;
+              const timeDifference = Math.abs(adjustedSleepTime - adjustedSnackingTime);
+              if (timeDifference <= 2) score -= 10;
+            }
+            if (sleepTime > 23) score -= 10;
+            return Math.max(0, Math.min(100, score));
+          };
+
+          const healthScore = getHealthScore();
+
+          const getScoreColor = (score) => {
+            if (score >= 85) return 'text-green-500';
+            if (score >= 70) return 'text-blue-500';
+            if (score >= 50) return 'text-yellow-500';
+            return 'text-red-500';
+          };
+
+          const getMotivationalMessage = () => {
+            if (healthScore >= 85) {
+              return "Amazing! You're building healthy habits that will benefit you for life! 🌟";
+            } else if (healthScore >= 70) {
+              return "Good job! A few small tweaks could make you feel even better! 💪";
+            } else if (healthScore >= 50) {
+              return "You're on the right track, but your body needs more support to thrive. 🌱";
+            }
+            return "Your body and brain need more rest to perform at their best. Let's improve! 🎯";
+          };
+
+          const getRealHealthFacts = () => {
+            const facts = [];
+            
+            if (sleepHours < 8) {
+              facts.push("Sleep deprivation accelerates cellular aging and reduces human growth hormone production by up to 70%, directly impacting skin repair and hair growth.");
+              facts.push("Chronic sleep loss increases risk of: obesity, type 2 diabetes, cardiovascular disease, weakened immune system, depression, and anxiety disorders.");
+              
+              if (age >= 25) {
+                facts.push(`At age ${age}, your metabolism is already ${100 - metabolismRate}% slower than teenage years. Poor sleep compounds this, making weight management significantly harder.`);
+              }
+            }
+            
+            if (sleepHours < 7 || lateNightEating) {
+              facts.push("💡 SKIN IMPACT: Sleep deprivation increases cortisol (stress hormone) which breaks down skin collagen, causing premature wrinkles, sagging, and dull complexion. Just one night of poor sleep increases inflammatory markers by 40%.");
+            }
+            
+            if (sleepHours < 7) {
+              facts.push("💡 HAIR IMPACT: During deep sleep, your body produces growth hormones essential for hair follicle health. Chronic sleep loss can lead to hair thinning, slower growth (up to 30% reduction), and premature graying due to oxidative stress.");
+            }
+            
+            if (sleepHours < 7) {
+              facts.push("💡 BRAIN IMPACT: Sleep-deprived brains show 60% reduced activity in decision-making regions. Memory consolidation drops by 40%, and reaction time equals legal intoxication after just 17 hours awake.");
+            }
+            
+            if (lateNightEating) {
+              const adjustedSleepTime = sleepTime >= 24 ? sleepTime - 24 : sleepTime;
+              const adjustedSnackingTime = snackingTime >= 24 ? snackingTime - 24 : snackingTime;
+              const timeDifference = Math.abs(adjustedSleepTime - adjustedSnackingTime);
+              
+              facts.push("Late-night eating forces your digestive system to work during its natural rest period, disrupting circadian rhythms and reducing sleep quality by up to 35%.");
+              
+              if (timeDifference <= 2) {
+                facts.push("⚠️ CRITICAL: Eating within 2 hours of bedtime increases risk of: acid reflux/GERD (3x higher), insulin resistance leading to type 2 diabetes, weight gain (55% higher obesity risk), inflammatory skin conditions (acne, eczema), and disrupted REM sleep affecting memory and mood.");
+              } else {
+                facts.push("Late-night eating raises insulin and blood sugar during sleep, promoting fat storage, disrupting hormone regulation, and increasing inflammation throughout the body including skin and scalp.");
+              }
+              
+              if (age >= 25) {
+                facts.push(`⚠️ AGE WARNING: At ${age}, your metabolism is ${metabolismRate}%. Late-night eating has MORE severe consequences as your body's ability to process food efficiently decreases with age, leading to faster weight gain and metabolic dysfunction.`);
+              }
+            }
+            
+            if (sleepTime > 24) {
+              facts.push("Going to bed after midnight disrupts your natural circadian rhythm, reducing melatonin production (which protects skin cells), increasing cortisol (aging hormone), and decreasing deep sleep stages crucial for physical repair and cognitive function.");
+            }
+
+            if (sleepHours >= 8 && !lateNightEating && sleepTime <= 23) {
+              facts.push("✅ Excellent! Your habits optimize: collagen production (younger-looking skin), hair growth cycles, memory consolidation, immune function, metabolism, and reduce lifetime risk of chronic diseases by up to 50%!");
+              
+              if (age >= 25) {
+                facts.push(`✅ Great news! Despite your metabolism being at ${metabolismRate}%, your healthy sleep habits help counteract age-related decline and keep you healthier than 80% of people your age.`);
+              }
+            }
+
+            return facts;
+          };
+
+          return (
+            <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-6">
+              <div className="max-w-4xl mx-auto">
+                <div className="text-center mb-8">
+                  <h1 className="text-4xl font-bold text-purple-900 mb-2">
+                    Sleep Deprivation Wellness Tracking
+                  </h1>
+                  <p className="text-gray-600">
+                    Understand how sleep, age, and habits impact your health, appearance, and performance
+                  </p>
+                  <div className="mt-4">
+                    <a href="../index.html" className="text-purple-600 hover:text-purple-800 underline text-sm">
+                      ← Back to Portfolio
+                    </a>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
+                  <div className="flex items-center mb-4">
+                    <User className="w-6 h-6 text-purple-600 mr-2" />
+                    <h2 className="text-2xl font-bold text-gray-800">Your Age</h2>
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Select your age: {age} years old
+                      </label>
+                      <span className="text-sm text-gray-600">
+                        Metabolism Rate: {metabolismRate}%
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="13"
+                      max="45"
+                      value={age}
+                      onChange={(e) => setAge(parseInt(e.target.value))}
+                      className="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                      <span>13</span>
+                      <span>25</span>
+                      <span>35</span>
+                      <span>45</span>
+                    </div>
+                    <p className="text-xs text-gray-600 mt-2">
+                      {age < 18 ? '🔥 Peak metabolism years' : 
+                       age < 25 ? '💪 Metabolism begins to slow' :
+                       age < 35 ? '⚠️ Metabolism declining, healthy habits crucial' :
+                       '⚠️ Metabolism significantly reduced, strict habits essential'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
+                  <div className="mb-8">
+                    <div className="flex items-center mb-4">
+                      <Moon className="w-6 h-6 text-purple-600 mr-2" />
+                      <h2 className="text-2xl font-bold text-gray-800">Sleep Schedule</h2>
+                    </div>
+                    
+                    <div className="space-y-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Bedtime: {formatTime(sleepTime)}
+                        </label>
+                        <input
+                          type="range"
+                          min="22"
+                          max="29"
+                          value={sleepTime}
+                          onChange={(e) => setSleepTime(parseInt(e.target.value))}
+                          className="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer"
+                        />
+                        <div className="flex justify-between text-xs text-gray-500 mt-1">
+                          <span>10:00 PM</span>
+                          <span>1:00 AM</span>
+                          <span>5:00 AM</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Wake Time: {formatTime(wakeTime)}
+                        </label>
+                        <input
+                          type="range"
+                          min="7"
+                          max="15"
+                          value={wakeTime}
+                          onChange={(e) => setWakeTime(parseInt(e.target.value))}
+                          className="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer"
+                        />
+                        <div className="flex justify-between text-xs text-gray-500 mt-1">
+                          <span>7:00 AM</span>
+                          <span>10:00 AM</span>
+                          <span>3:00 PM</span>
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-r from-purple-100 to-blue-100 rounded-lg p-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-700 font-medium">Total Sleep:</span>
+                          <span className={`text-3xl font-bold ${sleepQuality.color}`}>
+                            {sleepHours} hours
+                          </span>
+                        </div>
+                        <div className="mt-2">
+                          <div className="w-full bg-gray-200 rounded-full h-3">
+                            <div
+                              className={`h-3 rounded-full ${
+                                sleepQuality.level === 'optimal' ? 'bg-green-500' :
+                                sleepQuality.level === 'good' ? 'bg-blue-500' :
+                                sleepQuality.level === 'adequate' ? 'bg-yellow-500' :
+                                sleepQuality.level === 'insufficient' ? 'bg-orange-500' :
+                                'bg-red-500'
+                              }`}
+                              style={{ width: `${(sleepHours / 10) * 100}%` }}
+                            />
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1 text-center">
+                            Recommended: 8-10 hours
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mb-8">
+                    <div className="flex items-center mb-4">
+                      <Apple className="w-6 h-6 text-green-600 mr-2" />
+                      <h2 className="text-2xl font-bold text-gray-800">Eating Habits</h2>
+                    </div>
+                    
+                    <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-gray-800 font-medium">Late Night Eating</span>
+                          <p className="text-sm text-gray-600">Do you eat late at night?</p>
+                        </div>
+                        <div className="relative">
+                          <button
+                            onClick={() => setLateNightEating(!lateNightEating)}
+                            className={`w-14 h-8 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+                              lateNightEating ? 'bg-orange-500' : 'bg-green-500'
+                            }`}
+                          >
+                            <div
+                              className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform ${
+                                lateNightEating ? 'translate-x-7' : 'translate-x-1'
+                              }`}
+                            />
+                          </button>
+                        </div>
+                      </div>
+
+                      {lateNightEating && (
+                        <div className="pt-4 border-t border-gray-200">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            What time do you usually snack? {formatTime(snackingTime)}
+                          </label>
+                          <input
+                            type="range"
+                            min="21"
+                            max="28"
+                            value={snackingTime}
+                            onChange={(e) => setSnackingTime(parseInt(e.target.value))}
+                            className="w-full h-2 bg-orange-200 rounded-lg appearance-none cursor-pointer"
+                          />
+                          <div className="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>9:00 PM</span>
+                            <span>12:00 AM</span>
+                            <span>4:00 AM</span>
+                          </div>
+                          
+                          {(() => {
+                            const adjustedSleepTime = sleepTime >= 24 ? sleepTime - 24 : sleepTime;
+                            const adjustedSnackingTime = snackingTime >= 24 ? snackingTime - 24 : snackingTime;
+                            const timeDifference = Math.abs(adjustedSleepTime - adjustedSnackingTime);
+                            
+                            return (
+                              <div className={`mt-3 p-3 rounded-lg ${
+                                timeDifference <= 2 ? 'bg-red-100 border-2 border-red-300' : 'bg-yellow-100 border-2 border-yellow-300'
+                              }`}>
+                                <p className="text-sm font-semibold text-gray-800">
+                                  {timeDifference <= 2 ? '⚠️ HIGH RISK: ' : '⚠️ WARNING: '}
+                                  Time between snacking and sleep: ~{timeDifference} hours
+                                </p>
+                                <p className="text-xs text-gray-700 mt-1">
+                                  {timeDifference <= 2 
+                                    ? 'Eating this close to bedtime significantly increases health risks!' 
+                                    : 'Try to finish eating at least 3 hours before bedtime for optimal health.'}
+                                </p>
+                              </div>
+                            );
+                          })()}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mb-8">
+                    <div className="flex items-center mb-4">
+                      <TrendingUp className="w-6 h-6 text-blue-600 mr-2" />
+                      <h2 className="text-2xl font-bold text-gray-800">Overall Wellness Score</h2>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className={`text-6xl font-bold mb-2 ${getScoreColor(healthScore)}`}>
+                        {healthScore}
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
+                        <div
+                          className={`h-4 rounded-full transition-all ${
+                            healthScore >= 85 ? 'bg-green-500' :
+                            healthScore >= 70 ? 'bg-blue-500' :
+                            healthScore >= 50 ? 'bg-yellow-500' :
+                            'bg-red-500'
+                          }`}
+                          style={{ width: `${healthScore}%` }}
+                        />
+                      </div>
+                      <p className="text-gray-700 text-lg">{getMotivationalMessage()}</p>
+                    </div>
+                  </div>
+
+                  <div className="mb-8">
+                    <div className="flex items-center mb-4">
+                      <Sparkles className="w-6 h-6 text-pink-600 mr-2" />
+                      <h2 className="text-2xl font-bold text-gray-800">Physical Health Indicators</h2>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-lg p-5 border-2 border-pink-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="font-bold text-gray-800">Skin Quality</h3>
+                          <Sparkles className="w-5 h-5 text-pink-500" />
+                        </div>
+                        <div className={`text-3xl font-bold mb-2 ${physicalEffects.skin.color}`}>
+                          {physicalEffects.skin.score}%
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                          <div
+                            className={`h-2 rounded-full ${
+                              physicalEffects.skin.score >= 85 ? 'bg-green-500' :
+                              physicalEffects.skin.score >= 70 ? 'bg-blue-500' :
+                              physicalEffects.skin.score >= 50 ? 'bg-yellow-500' :
+                              physicalEffects.skin.score >= 30 ? 'bg-orange-500' :
+                              'bg-red-500'
+                            }`}
+                            style={{ width: `${physicalEffects.skin.score}%` }}
+                          />
+                        </div>
+                        <p className="text-sm font-medium text-gray-700">{physicalEffects.skin.status}</p>
+                        {physicalEffects.skin.score < 70 && (
+                          <p className="text-xs text-red-600 mt-2">
+                            ⚠️ Risk: Premature aging, acne, dark circles, collagen breakdown
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-lg p-5 border-2 border-amber-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="font-bold text-gray-800">Hair Health</h3>
+                          <Wind className="w-5 h-5 text-amber-500" />
+                        </div>
+                        <div className={`text-3xl font-bold mb-2 ${physicalEffects.hair.color}`}>
+                          {physicalEffects.hair.score}%
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                          <div
+                            className={`h-2 rounded-full ${
+                              physicalEffects.hair.score >= 85 ? 'bg-green-500' :
+                              physicalEffects.hair.score >= 70 ? 'bg-blue-500' :
+                              physicalEffects.hair.score >= 50 ? 'bg-yellow-500' :
+                              physicalEffects.hair.score >= 30 ? 'bg-orange-500' :
+                              'bg-red-500'
+                            }`}
+                            style={{ width: `${physicalEffects.hair.score}%` }}
+                          />
+                        </div>
+                        <p className="text-sm font-medium text-gray-700">{physicalEffects.hair.status}</p>
+                        {physicalEffects.hair.score < 70 && (
+                          <p className="text-xs text-red-600 mt-2">
+                            ⚠️ Risk: Hair thinning, slow growth, dullness, breakage
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-5 border-2 border-blue-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="font-bold text-gray-800">Mental Focus</h3>
+                          <Brain className="w-5 h-5 text-blue-500" />
+                        </div>
+                        <div className={`text-3xl font-bold mb-2 ${physicalEffects.focus.color}`}>
+                          {physicalEffects.focus.score}%
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                          <div
+                            className={`h-2 rounded-full ${
+                              physicalEffects.focus.score >= 85 ? 'bg-green-500' :
+                              physicalEffects.focus.score >= 70 ? 'bg-blue-500' :
+                              physicalEffects.focus.score >= 50 ? 'bg-yellow-500' :
+                              physicalEffects.focus.score >= 30 ? 'bg-orange-500' :
+                              'bg-red-500'
+                            }`}
+                            style={{ width: `${physicalEffects.focus.score}%` }}
+                          />
+                        </div>
+                        <p className="text-sm font-medium text-gray-700">{physicalEffects.focus.status}</p>
+                        {physicalEffects.focus.score < 70 && (
+                          <p className="text-xs text-red-600 mt-2">
+                            ⚠️ Risk: Poor memory, brain fog, reduced productivity, mood issues
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mb-8">
+                    <div className="flex items-center mb-4">
+                      <Award className="w-6 h-6 text-yellow-600 mr-2" />
+                      <h2 className="text-2xl font-bold text-gray-800">Your Current Benefits</h2>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {getBenefits().map((benefit, index) => (
+                        <div
+                          key={index}
+                          className={`rounded-lg p-4 border-2 ${
+                            benefit.active
+                              ? 'bg-green-50 border-green-300'
+                              : 'bg-gray-50 border-gray-300 opacity-60'
+                          }`}
+                        >
+                          <div className="flex items-start">
+                            <div className={benefit.active ? 'text-green-600' : 'text-gray-400'}>
+                              {benefit.icon}
+                            </div>
+                            <div className="ml-3">
+                              <h3 className="font-semibold text-gray-800">{benefit.title}</h3>
+                              <p className="text-sm text-gray-600">{benefit.description}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
+                    <h3 className="font-bold text-blue-900 mb-3 flex items-center">
+                      <Heart className="w-5 h-5 mr-2" />
+                      Evidence-Based Health Insights
+                    </h3>
+                    <ul className="space-y-2">
+                      {getRealHealthFacts().map((fact, index) => (
+                        <li key={index} className="text-gray-700 text-sm flex items-start">
+                          <span className="text-blue-600 mr-2">•</span>
+                          <span>{fact}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="text-center">
+                  <button
+                    onClick={() => {
+                      setSleepTime(22);
+                      setWakeTime(7);
+                      setLateNightEating(false);
+                      setSnackingTime(23);
+                      setAge(16);
+                    }}
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+                  >
+                    Reset to Optimal Settings
+                  </button>
+                </div>
+
+                <div className="text-center mt-8 text-sm text-gray-600">
+                  <p>All health information is based on scientific research and medical guidelines.</p>
+                  <p className="mt-2">For personalized advice, consult with a healthcare provider.</p>
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        ReactDOM.render(<TeenWellnessTracker />, document.getElementById('root'));
+    </script>
+</body>
+</html>
