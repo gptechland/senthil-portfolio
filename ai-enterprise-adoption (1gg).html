@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Workflow AI: A Practical Guide for Application Owners | Senthil's Tech Blog</title>
+  <meta name="description" content="A practical guide for application and digital transformation owners to integrate AI decision support into existing workflows—securely and with clear business impact.">
+  <meta name="author" content="Senthil">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #1a2b4a;
+      --primary-light: #2d4a7c;
+      --primary-dark: #0f1a2e;
+      --accent: #c9a227;
+      --accent-light: #e8c547;
+      --accent-muted: rgba(201, 162, 39, 0.15);
+      --white: #ffffff;
+      --off-white: #f8f9fa;
+      --light-gray: #e9ecef;
+      --medium-gray: #6c757d;
+      --text: #2c3e50;
+      --text-muted: #5a6c7d;
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-primary);
+      font-size: 18px;
+      line-height: 1.8;
+      color: var(--text);
+      background: var(--off-white);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    .site-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-md);
+    }
+    .site-header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-logo {
+      color: var(--white);
+      font-weight: 600;
+      font-size: 1.125rem;
+      text-decoration: none;
+    }
+    .site-logo:hover { color: var(--accent); }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: rgba(255,255,255,0.1);
+      border-radius: var(--radius-sm);
+      transition: all 0.3s ease;
+    }
+    .back-link:hover {
+      background: rgba(255,255,255,0.2);
+      color: var(--white);
+    }
+
+    /* Hero */
+    .article-hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding: 4rem 2rem;
+      position: relative;
+    }
+    .article-hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .article-category {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--primary);
+      padding: 0.375rem 1rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1.5rem;
+    }
+    .article-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .article-subtitle {
+      font-size: 1.125rem;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+    }
+    .article-meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+    }
+
+    /* Content */
+    .article-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    .article-content h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      color: var(--primary);
+      margin: 2.5rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 3px solid var(--accent);
+      display: inline-block;
+    }
+    .article-content h3 {
+      font-size: 1.25rem;
+      color: var(--primary-light);
+      margin: 2rem 0 0.75rem;
+    }
+    .article-content p {
+      margin-bottom: 1.25rem;
+      color: var(--text-muted);
+    }
+    .article-content strong {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .article-content ul {
+      margin: 1rem 0 1.5rem;
+      padding-left: 0;
+      list-style: none;
+    }
+    .article-content li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-muted);
+    }
+    .article-content li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Key Point Box */
+    .key-point {
+      background: var(--primary);
+      color: var(--white);
+      border-radius: var(--radius-md);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+    .key-point p {
+      color: rgba(255,255,255,0.95);
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    /* Benefit Box */
+    .benefit-box {
+      background: var(--accent-muted);
+      border-left: 4px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+    .benefit-box p {
+      color: var(--primary);
+      margin: 0;
+      font-weight: 500;
+    }
+
+    /* Architecture Box */
+    .arch-box {
+      background: var(--white);
+      border: 2px solid var(--light-gray);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      margin: 2rem 0;
+      box-shadow: var(--shadow-md);
+    }
+    .arch-box h4 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+    .arch-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .arch-layer {
+      background: var(--primary);
+      color: var(--white);
+      padding: 0.875rem 1.25rem;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .arch-layer.amp { background: linear-gradient(135deg, #065F46, #047857); }
+    .arch-layer.ai { background: var(--accent); color: var(--primary); }
+    .arch-layer.app { background: linear-gradient(135deg, #1E40AF, #3B82F6); }
+    .arch-arrow { text-align: center; color: var(--medium-gray); font-size: 1.25rem; }
+
+    /* Team Table */
+    .team-box {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow-md);
+    }
+    .team-box h4 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    .team-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .team-table th {
+      background: var(--primary);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+    .team-table th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+    .team-table th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+    .team-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--light-gray);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .team-table td:first-child { color: var(--primary); font-weight: 500; }
+    .team-table tr:last-child td { border-bottom: none; }
+
+    /* Steps */
+    .steps {
+      margin: 1.5rem 0;
+    }
+    .step {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding: 1rem 1.25rem;
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+    }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      background: var(--primary);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .step-content h5 {
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+      font-size: 1rem;
+    }
+    .step-content p {
+      color: var(--text-muted);
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    /* Tier Model */
+    .tier-model {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+      align-items: center;
+    }
+    .tier-card {
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.5rem;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: var(--shadow-sm);
+    }
+    .tier-card.corporate { border: 2px solid var(--primary); }
+    .tier-card.solution { border: 2px solid var(--accent); }
+    .tier-card h5 {
+      color: var(--primary);
+      margin: 0;
+      font-size: 1rem;
+    }
+    .tier-card span {
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .tier-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0.5rem 0 0;
+    }
+    .tier-arrow { color: var(--medium-gray); font-size: 1.25rem; }
+
+    /* Author */
+    .author-box {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin: 2.5rem 0;
+      box-shadow: var(--shadow-md);
+    }
+    .author-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent);
+    }
+    .author-info h4 { font-size: 1rem; color: var(--primary); margin-bottom: 0.25rem; }
+    .author-info p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+
+    /* Footer */
+    .site-footer {
+      background: var(--primary-dark);
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.85rem;
+    }
+    .site-footer a { color: var(--accent); text-decoration: none; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .article-title { font-size: 1.75rem; }
+      .article-hero { padding: 2.5rem 1.5rem; }
+      .article-container { padding: 2rem 1.5rem; }
+      .article-meta { flex-direction: column; gap: 0.5rem; }
+      .author-box { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="site-header-content">
+      <a href="../index.html" class="site-logo">Senthil's Tech Blog</a>
+      <a href="../index.html#blog" class="back-link">
+        <span>←</span>
+        <span>All Articles</span>
+      </a>
+    </div>
+  </header>
+
+  <section class="article-hero">
+    <div class="article-hero-content">
+      <span class="article-category">AI Integration</span>
+      <h1 class="article-title">Pre-Workflow AI: A Practical Guide for Application Owners</h1>
+      <p class="article-subtitle">Add AI decision support to your existing workflows. Secure, simple, and with clear business impact.</p>
+      <div class="article-meta">
+        <span>📅 December 2025</span>
+        <span>⏱️ 6 min read</span>
+        <span>👤 Senthil</span>
+      </div>
+    </div>
+  </section>
+
+  <article class="article-container">
+    <div class="article-content">
+      
+      <p>If you own an application with validation workflows, this is for you. There's a practical way to add AI that helps your team make better decisions—without replacing them, without security risks, and without a massive investment.</p>
+
+      <p>The idea is simple: <strong>put AI before your validation workflow</strong>. Let it analyze incoming data, flag issues, and provide recommendations. Your team still makes the final call. AI assists; humans decide.</p>
+
+      <h2>What This Looks Like</h2>
+
+      <div class="arch-box">
+        <h4>How It Works</h4>
+        <div class="arch-flow">
+          <div class="arch-layer app">Your Application</div>
+          <div class="arch-arrow">↓ sends data</div>
+          <div class="arch-layer ai">AI Decision Support</div>
+          <div class="arch-arrow">↓ recommendations</div>
+          <div class="arch-layer">Validation Workflow</div>
+          <div class="arch-arrow">↓</div>
+          <div class="arch-layer amp">Human Reviews + Decides</div>
+        </div>
+      </div>
+
+      <p>Your application sends data points to AI before the validation workflow. AI analyzes and returns recommendations. The workflow presents these to your team. They review, apply judgment, and decide.</p>
+
+      <p>That's it. No black-box automation. No removing humans from the loop.</p>
+
+      <h2>Why This Matters</h2>
+
+      <p>What you get:</p>
+
+      <ul>
+        <li><strong>Faster decisions:</strong> AI pre-screens data and highlights what needs attention. Your team focuses on what matters.</li>
+        <li><strong>Better accuracy:</strong> AI catches patterns humans might miss. Humans catch context AI might miss. Both together are stronger.</li>
+        <li><strong>Consistent analysis:</strong> Every data point gets the same level of scrutiny. No more variations based on workload or fatigue.</li>
+        <li><strong>Audit trail:</strong> AI recommendations are logged. You can see what AI suggested and what humans decided.</li>
+      </ul>
+
+      <div class="benefit-box">
+        <p>Real impact: Teams report 40-60% reduction in review time for routine decisions, with better catch rates on anomalies.</p>
+      </div>
+
+      <h2>Security: Sorted</h2>
+
+      <p>Your data stays inside the enterprise. The corporate AMP AI platform handles this.</p>
+
+      <ul>
+        <li><strong>No external APIs:</strong> AI runs inside your security perimeter.</li>
+        <li><strong>No data leakage:</strong> Nothing goes to third-party services.</li>
+        <li><strong>Full compliance:</strong> Meets existing data governance requirements.</li>
+        <li><strong>Audit ready:</strong> Complete logging of all AI interactions.</li>
+      </ul>
+
+      <p>You focus on integration. The platform handles infrastructure and security.</p>
+
+      <h2>The Operating Model</h2>
+
+      <p>Two teams make this work:</p>
+
+      <div class="tier-model">
+        <div class="tier-card corporate">
+          <span>Corporate</span>
+          <h5>AMP AI Platform Team</h5>
+          <p>Owns infrastructure, security, model hosting. You consume their APIs.</p>
+        </div>
+        <div class="tier-arrow">↕</div>
+        <div class="tier-card solution">
+          <span>Grid Solution</span>
+          <h5>AI COE (Your Level)</h5>
+          <p>Builds integrations, tailors AI to your workflows, works with your business SMEs.</p>
+        </div>
+      </div>
+
+      <h2>The AI COE Team You Need</h2>
+
+      <p>Start lean. You need 4 people:</p>
+
+      <div class="team-box">
+        <h4>Recommended Team (4 Members)</h4>
+        <table class="team-table">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>What They Do</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AI Solution Lead</td>
+              <td>Coordinates with AMP AI platform, manages delivery, talks to business stakeholders</td>
+            </tr>
+            <tr>
+              <td>Full Stack Developer</td>
+              <td>Builds the integration between your app and AMP AI, handles data pipelines</td>
+            </tr>
+            <tr>
+              <td>Prompt Engineer</td>
+              <td>Designs AI prompts, tunes response quality, handles edge cases</td>
+            </tr>
+            <tr>
+              <td>Data Engineer</td>
+              <td>Prepares data for AI consumption, ensures quality, optimizes throughput</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>This team works with your existing Application Owners (who know the codebase) and Business SMEs (who own testing and validation).</p>
+
+      <div class="key-point">
+        <p>Business SMEs own testing. They validate that AI recommendations actually make sense for your operations. Technology builds; business validates.</p>
+      </div>
+
+      <h2>How to Enable This</h2>
+
+      <p>Four steps to go live:</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h5>Pick One Workflow</h5>
+            <p>Start with a single validation workflow that has clear data inputs. Don't boil the ocean.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h5>Set Up the Team</h5>
+            <p>Assign your 4-person AI COE. Connect with the corporate AMP AI platform team for API access.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h5>Build + Test</h5>
+            <p>Integrate your app with AMP AI. Run in shadow mode first—AI recommends, but doesn't block anything. Business SMEs validate outputs.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h5>Go Live + Expand</h5>
+            <p>Once validated, enable AI recommendations in the live workflow. Then pick the next workflow.</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>What Success Looks Like</h2>
+
+      <p>You'll know it's working when:</p>
+
+      <ul>
+        <li>Your team spends less time on routine reviews</li>
+        <li>Anomalies get caught earlier</li>
+        <li>Decision consistency improves</li>
+        <li>Your SMEs trust the AI recommendations (and know when to override them)</li>
+      </ul>
+
+      <p>The goal isn't AI making decisions. It's AI making your team's decisions faster and better.</p>
+
+      <h2>Next Step</h2>
+
+      <p>If you own an application with validation workflows:</p>
+
+      <ul>
+        <li>Identify one workflow where AI analysis would help</li>
+        <li>Talk to your leadership about standing up a small AI COE</li>
+        <li>Connect with the corporate AMP AI platform team</li>
+      </ul>
+
+      <p>Start small. Prove value. Scale from there.</p>
+
+      <div class="author-box">
+        <img src="../assets/img/senthil.jpg" alt="Senthil" class="author-avatar">
+        <div class="author-info">
+          <h4>Senthil</h4>
+          <p>IT Executive focused on digital transformation and practical AI adoption in enterprise environments.</p>
+        </div>
+      </div>
+
+    </div>
+  </article>
+
+  <footer class="site-footer">
+    <p>&copy; 2025 Senthil. All rights reserved. | <a href="../index.html">Back to Portfolio</a></p>
+  </footer>
+
+</body>
+</html>
